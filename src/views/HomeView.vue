@@ -1,18 +1,31 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="video-page">
+    <div class="video-content">
+      <VideoArea/>
+    </div>
   </div>
+
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import VideoArea from "@/components/VideoArea.vue";
 
 export default {
   name: 'HomeView',
-  components: {
-    HelloWorld
-  }
+  components: {VideoArea},
 }
 </script>
+
+<style scoped>
+.video-page {
+}
+.video-content {
+  margin-right: 100px;
+  margin-left: 100px;
+  width: 80%;
+  height: 100%;
+}
+video {
+  height: 100%;
+}
+</style>

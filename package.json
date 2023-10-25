@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "element-plus": "^2.4.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
+    "vue-star": "^0.0.4",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
