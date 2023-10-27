@@ -13,19 +13,18 @@ import VideoArea from "@/components/VideoArea.vue";
 export default {
   name: 'HomeView',
   components: {VideoArea},
+  data(){
+
+  },
+  methods:{
+
+  }
 }
 </script>
 
 <style scoped>
-.video-page {
-}
-.video-content {
-  margin-right: 100px;
-  margin-left: 100px;
-  width: 80%;
+.video-content{
   height: 100%;
-}
-video {
-  height: 100%;
+  background-color: cadetblue;
 }
 </style>

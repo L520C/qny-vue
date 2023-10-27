@@ -1,21 +1,31 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import SingleVideo from "@/views/SingleVideo.vue";
+import Mine from "@/views/Mine.vue";
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/', // 根路径
+    name: 'singleVideo',
+    component: SingleVideo, // 主页组件
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  // }
+  {
+    path: '/recommend', // 推荐页面路径
+    name: 'recommend',
+    component: SingleVideo, // 推荐页面组件
+  },
+  {
+    path: '/follow', // 关注页面路径
+    name: 'follow',
+    component: SingleVideo, // 关注页面组件
+  },
+  {
+    path: '/mine', // 我的页面路径
+    name: 'mine',
+    component: Mine, // 我的页面组件
+  },
+  // 其他页面的路由配置
 ]
+
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
