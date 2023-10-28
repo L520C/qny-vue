@@ -4,7 +4,6 @@
       <VideoArea/>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -13,17 +12,15 @@ import VideoArea from "@/components/VideoArea.vue";
 export default {
   name: 'HomeView',
   components: {VideoArea},
-  data(){
+  data() {
 
   },
-  methods:{
-
-  }
+  methods: {}
 }
 </script>
 
 <style scoped>
-.video-content{
+.video-content {
   height: 100%;
   background-color: cadetblue;
 }
