@@ -28,7 +28,7 @@ export default {
       try {
         // 替换为你的后端接口地址
         const response = await axios.get('http://localhost:10002/video/randomVideo');
-        this.currentVideoUrl = response.data;  // 假设响应体中的视频 URL 在 'url' 字段中
+        this.currentVideoUrl = response.data.data;  // 假设响应体中的视频 URL 在 'url' 字段中
         this.loadVideo();
       } catch (error) {
         console.error('Failed to fetch video URL:', error);

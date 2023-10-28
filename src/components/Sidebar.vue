@@ -8,6 +8,12 @@
       <el-menu-item index="recommend">推荐</el-menu-item>
       <el-menu-item index="follow">关注</el-menu-item>
       <el-menu-item index="mine">我的</el-menu-item>
+      <el-divider/>
+      <el-menu-item index="popular">热门</el-menu-item>
+      <el-menu-item index="physicalCulture">体育</el-menu-item>
+      <el-menu-item index="knowledge">知识</el-menu-item>
+      <el-menu-item index="follow">直播</el-menu-item>
+      <el-menu-item index="follow">放映厅</el-menu-item>
     </el-menu>
   </div>
 
