@@ -27,7 +27,7 @@
 
 <script>
 import Hls from 'hls.js';
-import axios from 'axios';
+import axios from 'axios';  // 确保你已经安装了 axios
 
 export default {
   data() {
@@ -96,6 +96,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style scoped>
