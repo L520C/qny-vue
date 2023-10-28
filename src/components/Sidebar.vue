@@ -18,17 +18,14 @@ export default {
   name:'Sidebar',
   data() {
     return {
-      activeMenu: "recommend", // 默认选中的菜单项
+      activeMenu: "recommend",
     };
   },
   methods: {
     handleMenuSelect(index) {
-      // 处理菜单项选择事件
       this.activeMenu = index;
-
-      // 根据菜单项的索引触发路由导航
       if (index === 'recommend') {
-        this.$router.push({ path: '/' }); // 导航到根路径
+        this.$router.push({ path: '/' });
       } else {
         this.$router.push({ name: index });
       }
@@ -38,22 +35,15 @@ export default {
 </script>
 
 <style scoped>
-.sidebar {
-  width: 200px; /* 侧边栏宽度 */
-  background-color: #333; /* 侧边栏背景色 */
-  color: #fff; /* 文字颜色 */
-}
-
-.sidebar .el-menu-item {
-  color: #fff; /* 菜单项文字颜色 */
-}
-
-.sidebar .el-menu-item:hover {
-  background-color: #555; /* 菜单项鼠标悬停背景色 */
-}
-.left{
+.left {
   height: 100%;
-  background-color: red;
 }
-/* 自定义样式可以根据需要进行调整 */
+
+.left .el-menu-item {
+  color: #fff;
+}
+
+.left .el-menu-item:hover {
+  /* background-color: #555; */
+}
 </style>

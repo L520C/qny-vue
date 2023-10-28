@@ -1,19 +1,16 @@
 <template>
-<div class="all"></div>
+  <div class="container">
+    我的
+  </div>
 </template>
 
 <script>
-  export default {
-    name:'Mine',
-    data(){
 
-    },
-  }
+export default {
+
+};
 </script>
+
 <style scoped>
-.all{
-  height: 500px;
-  width: 100%;
-  background-color: darkgray;
-}
+
 </style>
