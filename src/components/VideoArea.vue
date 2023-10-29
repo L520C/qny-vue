@@ -3,10 +3,10 @@
     <video ref="video" controls loop muted class="video-player"></video>
     <div class="interactions">
       <div class="circle" @click="likeVideo">
-        <img src="@/assets/image/video/路飞头像.png" alt="avatar" class="avatar" @mouseover="">
+        <img src="@/assets/image/video/路飞头像.png" alt="avatar" class="avatar">
       </div>
       <div class="interaction" @click="likeVideo">
-        <img src="@/assets/image/video/点赞(白色).png" alt="like" class="icon">
+        <img :src=likeUrl alt="like" class="icon">
         <span class="count">{{ likeCount }}</span>
       </div>
       <div class="interaction" @click="openComments">
@@ -14,12 +14,12 @@
         <span class="count">{{ commentCount }}</span>
       </div>
       <div class="interaction" @click="shareVideo">
-        <img src="@/assets/image/video/收藏(白色).png" alt="share" class="icon">
+        <img src="http://localhost:10002/images/收藏(白色).png" alt="share" class="icon">
         <span class="count">{{ shareCount }}</span>
       </div>
-      <div class="interaction" @click="reportVideo">
-        <img src="@/assets/image/video/分享(白色).png" alt="report" class="icon">
-        <span class="count">{{ reportCount }}</span>
+      <div class="interaction" @click="collectVideo">
+        <img src="@/assets/image/video/分享(白色).png" alt="collect" class="icon">
+        <span class="count">{{ collectCount }}</span>
       </div>
     </div>
   </div>
@@ -35,9 +35,13 @@ export default {
       currentVideoUrl: '',
       hls: null,
       likeCount: 0,
+      isLike: false,
+      likeUrl: 'http://localhost:10002/images/点赞(白色).png',
       commentCount: 0,
       shareCount: 0,
-      reportCount: 0,
+      collectCount: 0,
+      videoInfo: {},
+      isCollect: false
     };
   },
   mounted() {
@@ -49,14 +53,18 @@ export default {
     }
   },
   methods: {
-    async fetchVideoUrl() {
-      try {
-        const response = await axios.get('http://localhost:10002/video/randomVideo');
-        this.currentVideoUrl = response.data.data;
-        this.loadVideo();
-      } catch (error) {
-        console.error('Failed to fetch video URL:', error);
-      }
+    fetchVideoUrl() {
+      axios.get('http://localhost:10002/video/randomVideo')
+          .then(response => {
+            this.videoInfo = response.data.data;
+            this.currentVideoUrl = this.videoInfo.videoM3U8Url;
+            this.likeCount = this.videoInfo.videLikeCount;
+            this.loadVideo();
+            this.isVideoLike();
+          }).catch(error => {
+        console.log("错误信息=>", error)
+        alert("网络异常")
+      })
     },
     loadVideo() {
       const video = this.$refs.video;
@@ -83,7 +91,55 @@ export default {
       this.fetchVideoUrl();
     },
     likeVideo() {
-      this.likeCount++;
+      if (this.isLike) {
+        axios.put("http://localhost:10002/videoLike/subLikeCount?videoId=" + this.videoInfo.videoId)
+            .then(response => {
+              if (response.data.code === 200) {
+                this.isLike = false;
+                this.likeUrl = 'http://localhost:10002/images/点赞(白色).png';
+                this.getLikeCount();
+              }
+            }).catch(error => {
+          console.log("错误信息=>", error)
+          alert("网络异常")
+        })
+
+      } else {
+        axios.put("http://localhost:10002/videoLike/addLikeCount?videoId=" + this.videoInfo.videoId)
+            .then(response => {
+              if (response.data.code === 200) {
+                this.isLike = true;
+                this.likeUrl = 'http://localhost:10002/images/点赞(红色).png';
+                this.getLikeCount();
+              }
+            }).catch(error => {
+          console.log("错误信息=>", error)
+        })
+      }
+    },
+    getLikeCount() {
+      axios.get('http://localhost:10002/videoLike/getLikeCount?videoId=' + this.videoInfo.videoId)
+          .then(response => {
+            if (response.data.code === 200) {
+              this.likeCount = response.data.data;
+            }
+          }).catch(error => {
+        console.log("错误信息=>", error)
+      })
+    },
+
+    isVideoLike() {
+      axios.get('http://localhost:10002/videoLike/isLike?videoId=' + this.videoInfo.videoId)
+          .then(response => {
+            this.isLike = response.data.data;
+            if (this.isLike){
+              this.likeUrl = "http://localhost:10002/images/点赞(红色).png"
+            }else {
+              this.likeUrl = "http://localhost:10002/images/点赞(白色).png"
+            }
+          }).catch(error => {
+        console.log("错误信息=>", error)
+      })
     },
     openComments() {
       this.commentCount++;
@@ -91,8 +147,8 @@ export default {
     shareVideo() {
       this.shareCount++;
     },
-    reportVideo() {
-      this.reportCount++;
+    collectVideo() {
+      this.collectCount++;
     },
   },
 };
@@ -114,7 +170,7 @@ export default {
   width: 85%;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .interactions {
@@ -126,15 +182,15 @@ export default {
 }
 
 .interaction {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .icon {
-  width: 25px;
-  height: 25px;
+  width: 28px;
+  height: 28px;
 }
 
 .circle {
@@ -161,5 +217,13 @@ export default {
   font-size: 16px;
   font-weight: bold;
   color: #fff;
+}
+
+.interaction:hover {
+  cursor: pointer;
+}
+
+.circle:hover {
+  cursor: pointer;
 }
 </style>
