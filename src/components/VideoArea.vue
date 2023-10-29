@@ -13,13 +13,13 @@
         <img src="@/assets/image/video/评论(白色).png" alt="comment" class="icon">
         <span class="count">{{ commentCount }}</span>
       </div>
-      <div class="interaction" @click="shareVideo">
-        <img src="http://localhost:10002/images/收藏(白色).png" alt="share" class="icon">
-        <span class="count">{{ shareCount }}</span>
-      </div>
       <div class="interaction" @click="collectVideo">
-        <img src="@/assets/image/video/分享(白色).png" alt="collect" class="icon">
+        <img :src=collectUrl alt="collect" class="icon">
         <span class="count">{{ collectCount }}</span>
+      </div>
+      <div class="interaction" @click="shareVideo">
+        <img src="@/assets/image/video/分享(白色).png" alt="share" class="icon">
+        <span class="count">{{ shareCount }}</span>
       </div>
     </div>
   </div>
@@ -40,8 +40,9 @@ export default {
       commentCount: 0,
       shareCount: 0,
       collectCount: 0,
+      isCollect:false,
+      collectUrl:'http://localhost:10002/images/收藏(白色).png',
       videoInfo: {},
-      isCollect: false
     };
   },
   mounted() {
@@ -59,8 +60,10 @@ export default {
             this.videoInfo = response.data.data;
             this.currentVideoUrl = this.videoInfo.videoM3U8Url;
             this.likeCount = this.videoInfo.videLikeCount;
-            this.loadVideo();
+            this.collectCount = this.videoInfo.videoCollectCount;
             this.isVideoLike();
+            this.isVideoCollect();
+            this.loadVideo();
           }).catch(error => {
         console.log("错误信息=>", error)
         alert("网络异常")
@@ -117,11 +120,50 @@ export default {
         })
       }
     },
+
+    collectVideo() {
+      if (this.isCollect) {
+        axios.put("http://localhost:10002/videoCollect/subCollectCount?videoId=" + this.videoInfo.videoId)
+            .then(response => {
+              if (response.data.code === 200) {
+                this.isCollect = false;
+                this.collectUrl = 'http://localhost:10002/images/收藏(白色).png';
+                this.getCollectCount();
+              }
+            }).catch(error => {
+          console.log("错误信息=>", error)
+          alert("网络异常")
+        })
+
+      } else {
+        axios.put("http://localhost:10002/videoCollect/addCollectCount?videoId=" + this.videoInfo.videoId)
+            .then(response => {
+              if (response.data.code === 200) {
+                this.isCollect = true;
+                this.collectUrl = 'http://localhost:10002/images/收藏(黄色).png';
+                this.getCollectCount();
+              }
+            }).catch(error => {
+          console.log("错误信息=>", error)
+        })
+      }
+    },
+
     getLikeCount() {
       axios.get('http://localhost:10002/videoLike/getLikeCount?videoId=' + this.videoInfo.videoId)
           .then(response => {
             if (response.data.code === 200) {
               this.likeCount = response.data.data;
+            }
+          }).catch(error => {
+        console.log("错误信息=>", error)
+      })
+    },
+    getCollectCount(){
+      axios.get('http://localhost:10002/videoCollect/getCollectCount?videoId=' + this.videoInfo.videoId)
+          .then(response => {
+            if (response.data.code === 200) {
+              this.collectCount = response.data.data;
             }
           }).catch(error => {
         console.log("错误信息=>", error)
@@ -141,14 +183,24 @@ export default {
         console.log("错误信息=>", error)
       })
     },
+    isVideoCollect() {
+      axios.get('http://localhost:10002/videoCollect/isCollect?videoId=' + this.videoInfo.videoId)
+          .then(response => {
+            this.isCollect = response.data.data;
+            if (this.isCollect){
+              this.collectUrl = "http://localhost:10002/images/收藏(黄色).png"
+            }else {
+              this.collectUrl = "http://localhost:10002/images/收藏(白色).png"
+            }
+          }).catch(error => {
+        console.log("错误信息=>", error)
+      })
+    },
     openComments() {
       this.commentCount++;
     },
     shareVideo() {
       this.shareCount++;
-    },
-    collectVideo() {
-      this.collectCount++;
     },
   },
 };
