@@ -4,6 +4,7 @@ import Mine from "@/views/Mine.vue";
 import Popular from "@/views/Popular.vue";
 import PhysicalCulture from "@/views/PhysicalCulture.vue";
 import Knowledge from "@/views/Knowledge.vue";
+import UploadFile from "@/components/UploadFile.vue";
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
     path: '/recommend', // 推荐页面路径
     name: 'recommend',
     component: SingleVideo, // 推荐页面组件
+  },
+  {
+    path: '/uploadFile', // 上传视频路径
+    name: 'uploadFile',
+    component: UploadFile, // 上传视频组件
   },
   {
     path: '/follow', // 关注页面路径

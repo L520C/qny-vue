@@ -13,7 +13,9 @@ export default {
   name: 'HomeView',
   components: {VideoArea},
   data() {
+    return {
 
+    }
   },
   methods: {}
 }

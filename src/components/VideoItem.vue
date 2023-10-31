@@ -2,13 +2,23 @@
   <div class="all">
     <el-card>
       <div @mouseenter="playVideo" @mouseleave="pauseVideo" class="video-area">
-        <video v-show="!showCover" ref="video" controls loop muted class="video-player"
+        <video v-show="!showCover" ref="video" loop muted class="video-player"
         />
-        <img v-show="showCover" class="cover" src="https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/ironMan.jpg">
+        <img v-show="showCover" class="cover" :src="coverSrc">
       </div>
       <div class="video-message">
-        <el-text>视频描述</el-text>
-        <el-button>按钮</el-button>
+        <div>
+          <el-text>{{ videoDescription }}</el-text>
+        </div>
+        <div class="video-auth">
+          <div>
+            <el-link :underline="false">@{{ auth }}</el-link>
+          </div>
+          <div style="margin-left: 10px">
+            <el-text>{{ publishTime }}</el-text>
+          </div>
+        </div>
+
       </div>
     </el-card>
 
@@ -23,10 +33,14 @@ export default {
   name: "VideoItem",
   data() {
     return {
+      auth: 'auth', // 作者名字
+      publishTime: '10小时前', // 发布时间间隔
+      videoDescription: '视频描述', // 视频描述
       showCover: true,
       videoInfo: {},
       currentVideoUrl: '',
       hls: null,
+      coverSrc: 'https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/ironMan.jpg',
     };
   },
   mounted() {
@@ -92,7 +106,6 @@ export default {
 
 .all {
   display: flex;
-  flex-direction: column;
 }
 
 .video-player {
@@ -107,11 +120,17 @@ img {
 
 .video-area {
   width: auto;
-  height: 80%;
+  height: 70%;
 }
 
 .video-message {
   width: auto;
-  height: 20%;
+  height: 30%;
+}
+
+.video-auth {
+  //float: left;
+  display: flex;
+  flex-direction: row;
 }
 </style>

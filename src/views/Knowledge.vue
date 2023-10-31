@@ -7,14 +7,14 @@
 <script>
 export default {
   name: "Knowledge",
-  data(){
-
+  data() {
+    return {}
   },
 }
 </script>
 
 <style scoped>
-.all{
+.all {
   height: 500px;
   width: 100%;
   background-color: darkgray;
