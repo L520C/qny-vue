@@ -28,7 +28,7 @@
                :modal="false"
                style="background-color:  rgba(0,0,0,0.9);margin-bottom: 0;"
                class="comment">
-      <div style="font-size: 14px;margin-bottom: 15px">总评论数{{this.videoCommentVO.commentTotalCount}}</div>
+      <div style="font-size: 14px;margin-bottom: 15px">总评论数{{ this.videoCommentVO.commentTotalCount }}</div>
       <div class="commentInfo" v-for="item in this.videoCommentVO.commentShowList">
         <div class="commentHead">
           <el-avatar
@@ -39,16 +39,18 @@
         </div>
         <div class="commentContent">
           <div style="line-height: 1.6;">
-            {{item.commentContent}}
+            {{ item.commentContent }}
           </div>
           <div class="commentHandle">
-            <div style="margin-top: 5px">{{item.commentTime}} · {{ item.commentRegion }}</div>
+            <div style="margin-top: 5px">{{ item.commentTime }} · {{ item.commentRegion }}</div>
             <div style="margin-top: 10px;  display: flex;align-items: center;">
               <div class="commentIcon">
                 <el-icon style="font-size: 20px">
                   <ChatDotRound/>
                 </el-icon>
-                <div style="font-size: 12px;margin-left: 1px">回复</div>
+                <div style="font-size: 12px;margin-left: 1px" @click="handleCommentReply(item)">
+                  回复<span v-show="replying && replyId===item.id">中</span>
+                </div>
               </div>
               <div class="commentIcon">
                 <el-icon style="font-size: 20px">
@@ -62,10 +64,10 @@
                 <div style="font-size: 14px; margin-left: 1px">{{ item.likeCount }}</div>
               </div>
             </div>
-            <div style="margin-top: 15px" v-show="!item.showReply">
+            <div style="margin-top: 15px" v-show="!item.showReply && item.replyCount > 0">
               -----
-              <span style="font-weight: bold" @click="item.showReply=true" class="moreRecover">
-                &nbsp;展开{{item.replyCount}}条评论
+              <span style="font-weight: bold" @click="loadCommentReply(item)" class="moreRecover">
+                &nbsp;展开{{ item.replyCount }}条评论
                 <el-icon><ArrowDownBold/></el-icon>
               </span>
             </div>
@@ -73,26 +75,28 @@
 
           <!-- 回复评论开始 -->
           <div v-show="item.showReply">
-            <div class="commentInfo">
+            <div class="commentInfo" v-for="replyItem in this.commentReplyInfoList">
               <div class="commentHead">
                 <el-avatar
-                    src="http://localhost:10002/images/路飞头像.png"
+                    :src="replyItem.userIcon"
                     style="height: 26px;width: 26px;"
                 />
-                <div class="commentUsername">少年与梦</div>
+                <div class="commentUsername">{{ replyItem.username }}</div>
               </div>
               <div class="commentContent">
                 <div style="line-height: 1.6;">
-                  我15年的MacBook Pro现在还在用，自己动手换过一次电池[呲牙]
+                  {{ replyItem.commentContent }}
                 </div>
                 <div class="commentHandle">
-                  <div style="margin-top: 5px">2023-10-31 20:14:36 · 重庆</div>
+                  <div style="margin-top: 5px">{{ replyItem.commentTime }} · {{ replyItem.commentRegion }}</div>
                   <div style="margin-top: 10px;  display: flex;align-items: center;">
                     <div class="commentIcon">
                       <el-icon style="font-size: 20px">
                         <ChatDotRound/>
                       </el-icon>
-                      <div style="font-size: 12px;margin-left: 1px">回复</div>
+                      <div style="font-size: 12px;margin-left: 1px" @click="handleCommentReply(replyItem)">
+                        回复<span v-show="replying && replyId===replyItem.id">中</span>
+                      </div>
                     </div>
                     <div class="commentIcon">
                       <el-icon style="font-size: 20px">
@@ -103,7 +107,7 @@
                     <div class="commentIcon">
                       <img src="http://localhost:10002/images/爱心(评论区未点赞).png" class="icon"
                            style="height: 20px;width: 20px" alt="like">
-                      <div style="font-size: 14px; margin-left: 1px">12</div>
+                      <div style="font-size: 14px; margin-left: 1px">{{ replyItem.likeCount }}</div>
                     </div>
                   </div>
                   <div style="margin-top: 15px">
@@ -120,12 +124,17 @@
         </div>
       </div>
       <div class="bottom-bar">
-        <el-input class="commentSend"
-                  v-model="commentInfo"
-                  style="height: 50px;width: 350px"
-                  :prefix-icon="Search"
-                  @keyup.enter="handleCommentSend"
-                  placeholder="请输入评论内容"/>
+        <div class="commentSend">
+          <div v-show="replying" class="reply-info">正在回复{{ replyHead }}</div>
+          <el-input
+              v-model="commentInfo"
+              ref="replyInput"
+              style="height: 50px;width: 350px"
+              :prefix-icon="Search"
+              @keyup.enter="commentOrReply"
+              placeholder="请输入评论内容"/>
+        </div>
+
       </div>
       <div style="height: 100px"></div>
     </el-drawer>
@@ -156,7 +165,12 @@ export default {
       showComment: false,
       showReply: false,
       commentInfo: '',
-      videoCommentVO:{}
+      videoCommentVO: {},
+      replying: false,
+      replyHead: '',
+      replyId: '',
+      replyRootId: '',
+      commentReplyInfoList: []
     };
   },
   mounted() {
@@ -183,40 +197,115 @@ export default {
         alert("网络异常")
       })
     },
-    getRootComment(){
-      axios.get('http://localhost:10002/comment/getRootComment?videoId='+this.videoInfo.videoId)
+    loadCommentReply(item) {
+      axios.get('http://localhost:10002/comment/getCommentReply?videoId=' + item.videoId + '&commentId=' + item.id)
           .then(response => {
-              if (response.data.code ===200){
-                this.videoCommentVO = response.data.data;
-                this.commentCount = this.videoCommentVO.commentTotalCount;
-              }else {
-                ElMessage({
-                  showClose: true,
-                  message: '获取评论失败',
-                  type: 'error',
-                })
-              }
+            if (response.data.code === 200) {
+              this.commentReplyInfoList = response.data.data
+              item.showReply = true;
+            } else {
+              ElMessage({
+                showClose: true,
+                message: '加载回复失败',
+                type: 'error',
+              })
+            }
           }).catch(error => {
-          console.log("错误信息=>", error)
+        console.log("错误信息=>", error)
+        alert("网络异常")
+      })
+    },
+    handleCommentReply(item) {
+      // console.log("item=>",item)
+      this.replyRootId = item.parentId;
+      if (item.rootId !== '' && item.rootId !== null){
+        this.replyRootId = item.rootId;
+      }
+      if (this.replyId === item.id) {
+        this.replying = !this.replying
+      } else {
+        this.replyId = item.id
+        this.replying = true;
+      }
+      // alert(item.commentReply)
+      this.replyHead = '@' + item.username + '：' + item.commentContent;
+      if (this.replying) {
+        this.$refs.replyInput.focus();
+      } else {
+        this.$refs.replyInput.blur();
+      }
+    },
+    commentReplySend() {
+      let sendData = {
+        'videoId': this.videoInfo.videoId,
+        'commentContent': this.commentInfo,
+        'rootId': this.replyRootId,
+        'parentId': this.replyId
+      }
+      axios.post('http://localhost:10002/comment/save', sendData)
+          .then(response => {
+            if (response.data.code === 200) {
+              ElMessage({
+                showClose: true,
+                message: '回复成功',
+                type: 'success',
+              })
+            } else {
+              ElMessage({
+                showClose: true,
+                message: '回复失败',
+                type: 'error',
+              })
+            }
+          }).catch(error => {
+        console.log("错误信息=>", error)
+        alert("网络异常")
+      })
+      this.getRootComment();
+      this.commentInfo = ''
+    },
+    commentOrReply() {
+      if (this.replying) {
+        this.commentReplySend()
+      } else {
+        this.handleCommentSend()
+      }
+      this.replying = false;
+    },
+    getRootComment() {
+      axios.get('http://localhost:10002/comment/getRootComment?videoId=' + this.videoInfo.videoId)
+          .then(response => {
+            if (response.data.code === 200) {
+              this.videoCommentVO = response.data.data;
+              this.commentCount = this.videoCommentVO.commentTotalCount;
+            } else {
+              ElMessage({
+                showClose: true,
+                message: '获取评论失败',
+                type: 'error',
+              })
+            }
+          }).catch(error => {
+        console.log("错误信息=>", error)
         alert("网络异常")
       })
     },
     handleCommentSend() {
-      var sendData = {
+      let sendData = {
         'videoId': this.videoInfo.videoId,
         'commentContent': this.commentInfo,
         'rootId': '',
-        'id': ''
+        'parentId': ''
       }
-      axios.post('http://localhost:10002/comment/save',sendData )
+      axios.post('http://localhost:10002/comment/save', sendData)
           .then(response => {
-            if (response.data.code === 200){
+            if (response.data.code === 200) {
               ElMessage({
                 showClose: true,
                 message: '评论成功',
                 type: 'success',
               })
-            }else {
+            } else {
               ElMessage({
                 showClose: true,
                 message: '评论失败',
@@ -491,8 +580,7 @@ export default {
 }
 
 .bottom-bar {
-//width: 100%; position: relative;
-  display: flex;
+//width: 100%; position: relative; display: flex;
   justify-content: center;
 }
 
@@ -504,7 +592,7 @@ export default {
 }
 
 /deep/ .el-input__wrapper {
-  background-color:#65676c;
+  background-color: #65676c;
   box-shadow: none;
 }
 
@@ -515,6 +603,18 @@ export default {
 /deep/ .el-input__inner {
   caret-color: whitesmoke;
   color: whitesmoke;
+}
+
+.reply-info {
+  width: 350px;
+  background-color: #6d7070;
+  color: #b0b3b3;
+  border-radius: 1px;
+  height: 30px;
+  line-height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
 <script setup>
