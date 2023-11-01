@@ -21,6 +21,48 @@
         <el-text style="color: white">{{ form.region }}</el-text>
       </div>
     </div>
+    <div>
+        <el-popover placement="bottom" trigger="hover">
+          <template #reference>
+            <el-button>
+              <el-icon>
+                <CirclePlus/>
+              </el-icon>
+              上传作品
+              <el-icon>
+                <ArrowDown/>
+              </el-icon>
+            </el-button>
+          </template>
+          <div>
+            <div style="margin: 5px">
+              <el-text>
+                <el-icon>
+                  <VideoPlay/>
+                </el-icon>
+              </el-text>
+              <el-text> 发布视频</el-text>
+            </div>
+            <div style="margin: 5px">
+              <el-text>
+                <el-icon>
+                  <Picture/>
+                </el-icon>
+              </el-text>
+              <el-text> 发布图文</el-text>
+            </div>
+            <div style="margin: 5px">
+              <el-text>
+                <el-icon>
+                  <Money/>
+                </el-icon>
+              </el-text>
+              <el-text> 发布全景视频</el-text>
+            </div>
+          </div>
+        </el-popover>
+    </div>
+
     <div class="edit-button">
       <el-button color="rgb(65, 66, 76)" :dark="true" @click="dialogFormVisible = true">编辑资料</el-button>
     </div>
@@ -59,8 +101,11 @@
 
 <script>
 
+import {ArrowDown, CirclePlus, Money, VideoPlay} from "@element-plus/icons-vue";
+
 export default {
   name: "UserInfo",
+  components: {Money, VideoPlay, ArrowDown, CirclePlus},
   data() {
     return {
       dialogFormVisible: false,
