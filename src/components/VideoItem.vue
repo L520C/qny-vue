@@ -4,7 +4,7 @@
       <div @mouseenter="playVideo" @mouseleave="pauseVideo" class="video-area">
         <video v-show="!showCover" ref="video" loop muted class="video-player"
         />
-        <img v-show="showCover" class="cover" :src="coverSrc">
+        <img v-show="showCover" class="cover" :src="coverSrc" alt="无资源">
       </div>
       <div class="video-message">
         <div>
@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import axios from 'axios';  // 确保你已经安装了 axios
 import Hls from 'hls.js';
+import {randomVideo} from "@/api/request"; // 使用封装好的axios
 
 export default {
   name: "VideoItem",
@@ -54,15 +54,14 @@ export default {
   methods: {
     async loadContent() {
       // 异步获取数据
-      await axios.get("http://localhost:10002/video/randomVideo")
-          .then(response => {
-            this.videoInfo = response.data.data;
-            this.currentVideoUrl = this.videoInfo.videoM3U8Url;
-            this.loadVideo();
-          }).catch(error => {
-            console.log("错误信息=>", error)
-            // alert("网络异常")
-          })
+      await randomVideo().then(res => {
+        console.log(res);
+        this.videoInfo = res.data;
+        this.currentVideoUrl = this.videoInfo.videoM3U8Url;
+        this.loadVideo();
+      }).catch(err => {
+        console.log(err);
+      })
     },
     loadVideo() {
       const video = this.$refs.video;
@@ -129,8 +128,6 @@ img {
 }
 
 .video-auth {
-  //float: left;
-  display: flex;
-  flex-direction: row;
+//float: left; display: flex; flex-direction: row;
 }
 </style>

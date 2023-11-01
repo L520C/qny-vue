@@ -31,8 +31,8 @@ export default {
   methods: {
     handleMenuSelect(index) {
       this.activeMenu = index;
-      if (index === 'recommend') {
-        this.$router.push({path: '/'});
+      if (index === 'home') {
+        this.$router.push({path: '/recommend'});
       } else {
         this.$router.push({name: index});
       }

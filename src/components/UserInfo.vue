@@ -24,7 +24,7 @@
     <div>
         <el-popover placement="bottom" trigger="hover">
           <template #reference>
-            <el-button>
+            <el-button @click="submitWorks">
               <el-icon>
                 <CirclePlus/>
               </el-icon>
@@ -88,7 +88,7 @@
       </el-form>
       <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="dialogFormVisible = false">
+        <el-button type="primary" @click="commitFormData">
           保存
         </el-button>
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -102,6 +102,7 @@
 <script>
 
 import {ArrowDown, CirclePlus, Money, VideoPlay} from "@element-plus/icons-vue";
+import {getMessage} from "@/api/request";
 
 export default {
   name: "UserInfo",
@@ -114,6 +115,18 @@ export default {
         region: '平平无奇的描述',
         circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       },
+    }
+  },
+  methods: {
+    commitFormData() {
+      this.dialogFormVisible = false;
+      getMessage().then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      })
+    },
+    submitWorks() {
     }
   }
 }
