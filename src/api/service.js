@@ -18,7 +18,7 @@ Service.interceptors.request.use(config => {
     // axios封装，get 方式不能放置请求头，因为data为空，这里需要配置一下
     if (config.method === 'get') {
         config.data = true;
-        console.log("GET请求");
+        // console.log("GET请求");
     }
     config.headers['Authorization'] = localStorage.getItem('access_token');
 

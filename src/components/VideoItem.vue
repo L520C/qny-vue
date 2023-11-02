@@ -55,7 +55,7 @@ export default {
     async loadContent() {
       // 异步获取数据
       await randomVideo().then(res => {
-        console.log(res);
+        // console.log(res);
         this.videoInfo = res.data;
         this.currentVideoUrl = this.videoInfo.videoM3U8Url;
         this.loadVideo();

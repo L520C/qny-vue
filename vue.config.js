@@ -10,7 +10,7 @@ module.exports = {
     open: false, // 是否自动弹出浏览器页面
     proxy: {
       '/api': {
-        target: 'http://localhost:20000',
+        target: 'http://127.0.0.1:20000',
         ws: true,
         changeOrigin: true, // 表示是否跨域
         pathRewrite: {

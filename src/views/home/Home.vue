@@ -34,7 +34,7 @@ import Header from "@/components/Header.vue";
 
 export default {
   name: 'Home',
-  components: {Header, Sidebar}
+  components: {Header, Sidebar},
 }
 </script>
 

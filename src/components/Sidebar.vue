@@ -5,15 +5,22 @@
              background-color="#545c64"
              class="el-menu-vertical-demo"
              text-color="#fff">
-      <el-menu-item index="recommend">推荐</el-menu-item>
-      <el-menu-item index="follow">关注</el-menu-item>
-      <el-menu-item index="mine">我的</el-menu-item>
+      <el-menu-item index="recommend" class="menu-item">推荐</el-menu-item>
+      <el-menu-item index="follow" class="menu-item">关注</el-menu-item>
+      <el-menu-item index="mine" class="menu-item">
+        <el-text size="large" style="color: white;">
+          <el-icon>
+            <UserFilled/>
+          </el-icon>
+        </el-text>
+        <el-text size="large" style="color:white;">我的</el-text>
+      </el-menu-item>
       <el-divider/>
-      <el-menu-item index="popular">热门</el-menu-item>
-      <el-menu-item index="physicalCulture">体育</el-menu-item>
-      <el-menu-item index="knowledge">知识</el-menu-item>
-      <el-menu-item index="follow">直播</el-menu-item>
-      <el-menu-item index="follow">放映厅</el-menu-item>
+      <el-menu-item index="popular" class="menu-item">热门</el-menu-item>
+      <el-menu-item index="physicalCulture" class="menu-item">体育</el-menu-item>
+      <el-menu-item index="knowledge" class="menu-item">知识</el-menu-item>
+      <el-menu-item index="follow" class="menu-item">直播</el-menu-item>
+      <el-menu-item index="follow" class="menu-item">放映厅</el-menu-item>
     </el-menu>
   </div>
 
@@ -56,7 +63,13 @@ export default {
 
 .el-menu-item-content {
   display: flex;
-  align-items: center; /* X轴居中 */
-//justify-content: center; /* Y轴居中 */
+  align-items: center; /* 垂直居中 */
+//justify-content: center; /* 水平居中 */
+}
+
+.menu-item {
+  color: white;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
 }
 </style>

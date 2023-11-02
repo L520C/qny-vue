@@ -1,49 +1,48 @@
 <template>
-  <div class="all">
-    <div class="login-position">
-      <el-card shadow="always" style="width: 30%">
-        <h2>登录</h2>
-        <el-form
-            ref="ruleFormRef"
-            label-position="left"
-            label-width="80px"
-            :model="formLabelAlign"
-            :rules="rules"
-        >
-          <el-form-item label="用户名" prop="name">
-            <el-input v-model="formLabelAlign.name"
-                      type="text"
-                      placeholder="请输入用户名"
-                      maxlength="100"
-                      :validate-event="false"
-            />
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="formLabelAlign.password"
-                      type="password"
-                      placeholder="请输入密码"
-                      show-password
-                      maxlength="100"
-                      :validate-event="false"
-            />
-          </el-form-item>
-          <el-button @click="userLogin">登录</el-button>
-          <el-button native-type="reset">重置</el-button>
-          <el-button @click="registerUser()">注册</el-button>
-        </el-form>
-      </el-card>
-    </div>
+  <el-dialog class="login-dialog" auto-width not-padding v-model="dialogActive" title="登录">
+    <el-form
+        ref="ruleFormRef"
+        label-position="left"
+        label-width="80px"
+        :model="formLabelAlign"
+        :rules="rules"
+    >
+      <el-form-item label="用户名" prop="name">
+        <el-input v-model="formLabelAlign.name"
+                  type="text"
+                  placeholder="请输入用户名"
+                  maxlength="100"
+                  :validate-event="false"
+        />
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="formLabelAlign.password"
+                  type="password"
+                  placeholder="请输入密码"
+                  show-password
+                  maxlength="100"
+                  :validate-event="false"
+        />
+      </el-form-item>
+      <el-button @click="userLogin">登录</el-button>
+      <el-button native-type="reset">重置</el-button>
+      <el-button @click="registerUser()">注册</el-button>
+    </el-form>
 
-  </div>
+  </el-dialog>
 </template>
 
 <script>
 import {login} from "@/api/request";
 
 export default {
-  name: "Login",
+  name: "LoginDialog",
+  props: {
+    vue: Object,
+  },
   data() {
     return {
+      dialogActive: true,
       formLabelAlign: {
         name: '',
         password: '',
@@ -59,6 +58,7 @@ export default {
   },
   methods: {
     userLogin() { // 用户登录请求函数
+      console.log(this.$store.state.count);
       // 表单验证
       this.$refs.ruleFormRef.validate(async (valid) => {
         if (valid) { // 表单验证成功
@@ -68,8 +68,9 @@ export default {
             password: this.formLabelAlign.password,
           }).then(res => {
             localStorage.setItem('access_token', res.data)
-            // console.log(res); // 登录成功
+            console.log(res); // 登录成功
             this.$router.push({name: 'recommend'});
+            this.dialogActive = false;
           }).catch(err => {
             console.log(err);
             return false;

@@ -28,7 +28,7 @@
                :modal="false"
                style="background-color:  rgba(0,0,0,0.9);margin-bottom: 0;"
                class="comment">
-      <div style="font-size: 14px;margin-bottom: 15px">总评论数{{this.videoCommentVO.commentTotalCount}}</div>
+      <div style="font-size: 14px;margin-bottom: 15px">总评论数{{ this.videoCommentVO.commentTotalCount }}</div>
       <div class="commentInfo" v-for="item in this.videoCommentVO.commentShowList">
         <div class="commentHead">
           <el-avatar
@@ -39,10 +39,10 @@
         </div>
         <div class="commentContent">
           <div style="line-height: 1.6;">
-            {{item.commentContent}}
+            {{ item.commentContent }}
           </div>
           <div class="commentHandle">
-            <div style="margin-top: 5px">{{item.commentTime}} · {{ item.commentRegion }}</div>
+            <div style="margin-top: 5px">{{ item.commentTime }} · {{ item.commentRegion }}</div>
             <div style="margin-top: 10px;  display: flex;align-items: center;">
               <div class="commentIcon">
                 <el-icon style="font-size: 20px">
@@ -65,7 +65,7 @@
             <div style="margin-top: 15px" v-show="!item.showReply">
               -----
               <span style="font-weight: bold" @click="item.showReply=true" class="moreRecover">
-                &nbsp;展开{{item.replyCount}}条评论
+                &nbsp;展开{{ item.replyCount }}条评论
                 <el-icon><ArrowDownBold/></el-icon>
               </span>
             </div>
@@ -156,7 +156,7 @@ export default {
       showComment: false,
       showReply: false,
       commentInfo: '',
-      videoCommentVO:{}
+      videoCommentVO: {}
     };
   },
   mounted() {
@@ -183,21 +183,21 @@ export default {
         alert("网络异常")
       })
     },
-    getRootComment(){
-      axios.get('http://localhost:10002/comment/getRootComment?videoId='+this.videoInfo.videoId)
+    getRootComment() {
+      axios.get('http://localhost:10002/comment/getRootComment?videoId=' + this.videoInfo.videoId)
           .then(response => {
-              if (response.data.code ===200){
-                this.videoCommentVO = response.data.data;
-                this.commentCount = this.videoCommentVO.commentTotalCount;
-              }else {
-                ElMessage({
-                  showClose: true,
-                  message: '获取评论失败',
-                  type: 'error',
-                })
-              }
+            if (response.data.code === 200) {
+              this.videoCommentVO = response.data.data;
+              this.commentCount = this.videoCommentVO.commentTotalCount;
+            } else {
+              ElMessage({
+                showClose: true,
+                message: '获取评论失败',
+                type: 'error',
+              })
+            }
           }).catch(error => {
-          console.log("错误信息=>", error)
+        console.log("错误信息=>", error)
         alert("网络异常")
       })
     },
@@ -208,15 +208,15 @@ export default {
         'rootId': '',
         'id': ''
       }
-      axios.post('http://localhost:10002/comment/save',sendData )
+      axios.post('http://localhost:10002/comment/save', sendData)
           .then(response => {
-            if (response.data.code === 200){
+            if (response.data.code === 200) {
               ElMessage({
                 showClose: true,
                 message: '评论成功',
                 type: 'success',
               })
-            }else {
+            } else {
               ElMessage({
                 showClose: true,
                 message: '评论失败',
@@ -491,8 +491,7 @@ export default {
 }
 
 .bottom-bar {
-//width: 100%; position: relative;
-  display: flex;
+//width: 100%; position: relative; display: flex;
   justify-content: center;
 }
 
@@ -503,16 +502,16 @@ export default {
   color: white;
 }
 
-/deep/ .el-input__wrapper {
-  background-color:#65676c;
+:deep(.el-input__wrapper) {
+  background-color: #65676c;
   box-shadow: none;
 }
 
-/deep/ .el-input {
+:deep(.el-input) {
   --el-input-focus-border-color: none;
 }
 
-/deep/ .el-input__inner {
+:deep(.el-input__inner) {
   caret-color: whitesmoke;
   color: whitesmoke;
 }
