@@ -1,24 +1,31 @@
 <template>
   <div class="all" ref="all" v-on:scroll="checkScroll">
     <div class="video-area">
-      <h1>热门视频</h1>
+      <h1>视频</h1>
       <div class="video-content">
         <div v-for="o in videoNum" :key="o">
           <video-item class="video-item-content"/>
-<!--          <video-item-player class="video-item-content"/>-->
+          <!--          <video-item-player class="video-item-content"/>-->
         </div>
       </div>
     </div>
     <div class="rank-area">
-      <h1>热门排行</h1>
-      <div class="ranking-item">
+      <h1>相关搜索</h1>
+      <el-card>
         <div v-for="i in 10" :key="i" class="ranking-item-content">
           <div>
             <el-text>{{ i }}</el-text>
           </div>
-          <ranking-item title="标题" hot-num="热度"/>
         </div>
-      </div>
+      </el-card>
+<!--      <div class="ranking-item">-->
+<!--        <div v-for="i in 10" :key="i" class="ranking-item-content">-->
+<!--          <div>-->
+<!--            <el-text>{{ i }}</el-text>-->
+<!--          </div>-->
+<!--          <ranking-item title="标题" hot-num="热度"/>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -27,11 +34,10 @@
 
 import VideoItem from "@/components/VideoItem.vue";
 import RankingItem from "@/components/RankingItem.vue";
-import VideoItemPlayer from "@/components/VideoItem-player.vue";
 
 export default {
-  name: 'Popular',
-  components: {VideoItem, RankingItem, VideoItemPlayer},
+  name: 'Search',
+  components: {VideoItem, RankingItem},
   data() {
     return {
       videoNum: 3,
@@ -72,7 +78,7 @@ export default {
 }
 
 .video-content {
-  //display: flex;
+//display: flex;
   justify-content: center;
 }
 

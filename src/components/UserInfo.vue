@@ -22,45 +22,45 @@
       </div>
     </div>
     <div>
-        <el-popover placement="bottom" trigger="hover">
-          <template #reference>
-            <el-button>
+      <el-popover placement="bottom" trigger="hover">
+        <template #reference>
+          <el-button @click="submitWorks">
+            <el-icon>
+              <CirclePlus/>
+            </el-icon>
+            上传作品
+            <el-icon>
+              <ArrowDown/>
+            </el-icon>
+          </el-button>
+        </template>
+        <div>
+          <div style="margin: 5px">
+            <el-text>
               <el-icon>
-                <CirclePlus/>
+                <VideoPlay/>
               </el-icon>
-              上传作品
-              <el-icon>
-                <ArrowDown/>
-              </el-icon>
-            </el-button>
-          </template>
-          <div>
-            <div style="margin: 5px">
-              <el-text>
-                <el-icon>
-                  <VideoPlay/>
-                </el-icon>
-              </el-text>
-              <el-text> 发布视频</el-text>
-            </div>
-            <div style="margin: 5px">
-              <el-text>
-                <el-icon>
-                  <Picture/>
-                </el-icon>
-              </el-text>
-              <el-text> 发布图文</el-text>
-            </div>
-            <div style="margin: 5px">
-              <el-text>
-                <el-icon>
-                  <Money/>
-                </el-icon>
-              </el-text>
-              <el-text> 发布全景视频</el-text>
-            </div>
+            </el-text>
+            <el-text> 发布视频</el-text>
           </div>
-        </el-popover>
+          <div style="margin: 5px">
+            <el-text>
+              <el-icon>
+                <Picture/>
+              </el-icon>
+            </el-text>
+            <el-text> 发布图文</el-text>
+          </div>
+          <div style="margin: 5px">
+            <el-text>
+              <el-icon>
+                <Money/>
+              </el-icon>
+            </el-text>
+            <el-text> 发布全景视频</el-text>
+          </div>
+        </div>
+      </el-popover>
     </div>
 
     <div class="edit-button">
@@ -88,32 +88,46 @@
       </el-form>
       <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="dialogFormVisible = false">
+        <el-button type="primary" @click="commitFormData">
           保存
         </el-button>
         <el-button @click="dialogFormVisible = false">取消</el-button>
       </span>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
 
 import {ArrowDown, CirclePlus, Money, VideoPlay} from "@element-plus/icons-vue";
+import {getMessage} from "@/api/request";
 
 export default {
   name: "UserInfo",
   components: {Money, VideoPlay, ArrowDown, CirclePlus},
   data() {
     return {
+      active: false,
       dialogFormVisible: false,
       form: {
         name: 'Tom',
         region: '平平无奇的描述',
         circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       },
+    }
+  },
+  methods: {
+    commitFormData() {
+      this.dialogFormVisible = false;
+      getMessage().then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      })
+    },
+    submitWorks() {
+      this.$store.state.loginActive = true;
     }
   }
 }
@@ -127,7 +141,7 @@ export default {
 }
 
 .block {
-  //margin: 10px;
+//margin: 10px;
 }
 
 .user-info {
@@ -156,9 +170,5 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
-}
-
-.el-dialog__title {
-  color: white;
 }
 </style>
