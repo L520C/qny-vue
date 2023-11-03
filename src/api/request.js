@@ -33,6 +33,14 @@ export function randomVideo() {
     })
 }
 
+// 验证 token
+export function checkToken() {
+    return Service({
+        url: '/api/user/verify',
+        method: 'post',
+    })
+}
+
 // POST验证
 export function getMessage() {
     return Service({

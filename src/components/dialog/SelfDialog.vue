@@ -1,18 +1,22 @@
 <template>
-  <el-dialog auto-width not-padding v-model="dialogActive">
-    <el-tabs v-model="activeName" class="demo-tabs" stretch>
-      <el-tab-pane label="登录" name="first">User</el-tab-pane>
-      <el-tab-pane label="注册" name="second">Config</el-tab-pane>
-    </el-tabs>
-  </el-dialog>
-
+  <el-tabs v-model="activeName" class="demo-tabs" stretch>
+    <el-tab-pane label="登录" name="first">
+      <login-form/>
+    </el-tab-pane>
+    <el-tab-pane label="注册" name="second">
+      <register-form/>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script>
 import {ref} from "vue";
+import LoginForm from "@/components/dialog/LoginForm.vue";
+import RegisterForm from "@/components/dialog/RegisterForm.vue";
 
 export default {
-  name: "Dialog",
+  name: "SelfDialog",
+  components: {LoginForm, RegisterForm},
   data() {
     return {
       dialogActive: true,

@@ -70,6 +70,6 @@ export default {
 .menu-item {
   color: white;
   align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
+  //justify-content: center; /* 水平居中 */
 }
 </style>

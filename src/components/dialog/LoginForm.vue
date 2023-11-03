@@ -1,35 +1,32 @@
 <template>
-  <el-dialog class="login-dialog" auto-width not-padding v-model="dialogActive" title="登录">
-    <el-form
-        ref="ruleFormRef"
-        label-position="left"
-        label-width="80px"
-        :model="formLabelAlign"
-        :rules="rules"
-    >
-      <el-form-item label="用户名" prop="name">
-        <el-input v-model="formLabelAlign.name"
-                  type="text"
-                  placeholder="请输入用户名"
-                  maxlength="100"
-                  :validate-event="false"
-        />
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="formLabelAlign.password"
-                  type="password"
-                  placeholder="请输入密码"
-                  show-password
-                  maxlength="100"
-                  :validate-event="false"
-        />
-      </el-form-item>
-      <el-button @click="userLogin">登录</el-button>
-      <el-button native-type="reset">重置</el-button>
-      <el-button @click="registerUser()">注册</el-button>
-    </el-form>
-
-  </el-dialog>
+  <el-form
+      ref="ruleFormRef"
+      label-position="left"
+      label-width="80px"
+      :model="formLabelAlign"
+      :rules="rules"
+  >
+    <el-form-item label="用户名" prop="name">
+      <el-input v-model="formLabelAlign.name"
+                type="text"
+                placeholder="请输入用户名"
+                maxlength="100"
+                :validate-event="false"
+      />
+    </el-form-item>
+    <el-form-item label="密码" prop="password">
+      <el-input v-model="formLabelAlign.password"
+                type="password"
+                placeholder="请输入密码"
+                show-password
+                maxlength="100"
+                :validate-event="false"
+      />
+    </el-form-item>
+    <el-button @click="userLogin">登录</el-button>
+    <el-button native-type="reset">重置</el-button>
+<!--    <el-button @click="registerUser()">注册</el-button>-->
+  </el-form>
 </template>
 
 <script>

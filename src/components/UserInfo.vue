@@ -102,7 +102,6 @@
 
 import {ArrowDown, CirclePlus, Money, VideoPlay} from "@element-plus/icons-vue";
 import {getMessage} from "@/api/request";
-import login from "@/components/dialog/index"
 
 export default {
   name: "UserInfo",
@@ -128,8 +127,7 @@ export default {
       })
     },
     submitWorks() {
-      console.log(this.$store.state.count);
-      login.show();
+      this.$store.state.loginActive = true;
     }
   }
 }
