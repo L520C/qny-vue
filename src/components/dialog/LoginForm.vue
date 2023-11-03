@@ -25,7 +25,7 @@
     </el-form-item>
     <el-button @click="userLogin">登录</el-button>
     <el-button native-type="reset">重置</el-button>
-<!--    <el-button @click="registerUser()">注册</el-button>-->
+    <!--    <el-button @click="registerUser()">注册</el-button>-->
   </el-form>
 </template>
 
@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     userLogin() { // 用户登录请求函数
-      console.log(this.$store.state.count);
       // 表单验证
       this.$refs.ruleFormRef.validate(async (valid) => {
         if (valid) { // 表单验证成功
@@ -63,11 +62,11 @@ export default {
           login({
             name: this.formLabelAlign.name,
             password: this.formLabelAlign.password,
-          }).then(res => {
+          }).then(res => { // 登录成功
             localStorage.setItem('access_token', res.data)
-            console.log(res); // 登录成功
+            // console.log(res);
             this.$router.push({name: 'recommend'});
-            this.dialogActive = false;
+            this.$store.state.loginActive = false; // 弹窗消失
           }).catch(err => {
             console.log(err);
             return false;

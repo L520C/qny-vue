@@ -7,6 +7,7 @@ import Popular from "@/views/Popular.vue";
 import PhysicalCulture from "@/views/PhysicalCulture.vue";
 import Knowledge from "@/views/Knowledge.vue";
 import UploadFile from "@/components/UploadFile.vue";
+import Search from "@/components/Search.vue";
 
 const routes = [
     {
@@ -51,6 +52,11 @@ const routes = [
         name: 'uploadFile',
         component: UploadFile, // 上传视频组件
     },
+    {
+        path: '/search',
+        name: 'search',
+        component: Search,
+    }
     // 其他页面的路由配置
 ]
 

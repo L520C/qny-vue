@@ -9,36 +9,25 @@
       class="demo-ruleForm"
   >
     <el-form-item label="用户名" prop="uname">
-      <el-input v-model="ruleForm.uname"></el-input>
+      <el-input v-model="ruleForm.uname"/>
     </el-form-item>
     <el-form-item label="密码" prop="pass">
-      <el-input
-          type="password"
-          v-model="ruleForm.pass"
-          autocomplete="off"
-      ></el-input>
+      <el-input type="password" v-model="ruleForm.pass" autocomplete="off"/>
     </el-form-item>
     <el-form-item label="确认密码" prop="password">
-      <el-input
-          type="password"
-          v-model="ruleForm.password"
-          autocomplete="off"
-      ></el-input>
+      <el-input type="password" v-model="ruleForm.password" autocomplete="off"/>
     </el-form-item>
   </el-form>
   <div class="btnGroup">
-    <el-button type="primary" @click="submitForm('ruleForm')"
-    >提交
-    </el-button
-    >
+    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
     <el-button @click="resetForm('ruleForm')">重置</el-button>
-    <el-button @click="goBack">返回</el-button>
   </div>
 </template>
 
 <script>
 import {ElMessage} from "element-plus";
 import {userRegister} from "@/api/request";
+import {ref} from "vue";
 
 export default {
   name: 'RegisterForm',
@@ -87,8 +76,6 @@ export default {
                 duration: 1000,
                 type: "success",
               })
-              // console.log(res);
-              this.$router.push({path: '/login'}); // 转到登录页面
             } else {
               ElMessage({
                 message: "注册失败",
@@ -113,9 +100,6 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    },
-    goBack() {
-      this.$router.go(-1);
     },
   },
 };
