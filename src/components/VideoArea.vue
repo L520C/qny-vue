@@ -2,7 +2,7 @@
   <div class="container" @wheel="onWheel">
     <video ref="video" controls loop muted class="video-player"></video>
     <div class="interactions">
-      <div class="circle" @click="likeVideo">
+      <div class="circle">
         <img src="@/assets/image/video/路飞头像.png" alt="avatar" class="avatar">
       </div>
       <div class="interaction" @click="likeVideo">
@@ -43,12 +43,12 @@
           </div>
           <div class="commentHandle">
             <div style="margin-top: 5px">{{ item.commentTime }} · {{ item.commentRegion }}</div>
-            <div style="margin-top: 10px;  display: flex;align-items: center;">
-              <div class="commentIcon">
+            <div style="margin-top: 10px;  display: flex;align-items: center;"  >
+              <div class="commentIcon" @click="handleCommentReply(item)">
                 <el-icon style="font-size: 20px">
                   <ChatDotRound/>
                 </el-icon>
-                <div style="font-size: 12px;margin-left: 1px" @click="handleCommentReply(item)">
+                <div style="font-size: 12px;margin-left: 1px">
                   回复<span v-show="replying && replyId===item.id">中</span>
                 </div>
               </div>
@@ -58,8 +58,8 @@
                 </el-icon>
                 <div style="font-size: 12px;margin-left: 1px">分享</div>
               </div>
-              <div class="commentIcon">
-                <img src="http://localhost:10002/images/爱心(评论区未点赞).png" class="icon"
+              <div class="commentIcon" @click="handleCommentLike(item)">
+                <img :src="item.isLike ? 'http://localhost:10002/images/点赞(红色).png':'http://localhost:10002/images/爱心(评论区未点赞).png'" class="icon"
                      style="height: 20px;width: 20px" alt="like">
                 <div style="font-size: 14px; margin-left: 1px">{{ item.likeCount }}</div>
               </div>
@@ -89,12 +89,12 @@
                 </div>
                 <div class="commentHandle">
                   <div style="margin-top: 5px">{{ replyItem.commentTime }} · {{ replyItem.commentRegion }}</div>
-                  <div style="margin-top: 10px;  display: flex;align-items: center;">
-                    <div class="commentIcon">
+                  <div style="margin-top: 10px;  display: flex;align-items: center;" >
+                    <div class="commentIcon" @click="handleCommentReply(replyItem)">
                       <el-icon style="font-size: 20px">
                         <ChatDotRound/>
                       </el-icon>
-                      <div style="font-size: 12px;margin-left: 1px" @click="handleCommentReply(replyItem)">
+                      <div style="font-size: 12px;margin-left: 1px" >
                         回复<span v-show="replying && replyId===replyItem.id">中</span>
                       </div>
                     </div>
@@ -104,8 +104,8 @@
                       </el-icon>
                       <div style="font-size: 12px;margin-left: 1px">分享</div>
                     </div>
-                    <div class="commentIcon">
-                      <img src="http://localhost:10002/images/爱心(评论区未点赞).png" class="icon"
+                    <div class="commentIcon" @click="handleCommentLike(replyItem)">
+                      <img :src="replyItem.isLike ? 'http://localhost:10002/images/点赞(红色).png':'http://localhost:10002/images/爱心(评论区未点赞).png'" class="icon"
                            style="height: 20px;width: 20px" alt="like">
                       <div style="font-size: 14px; margin-left: 1px">{{ replyItem.likeCount }}</div>
                     </div>
@@ -186,9 +186,12 @@ export default {
       axios.get('http://localhost:10002/video/randomVideo')
           .then(response => {
             this.videoInfo = response.data.data;
+            console.log("response.data.data=>",response.data.data)
+            console.log("videoInfo=>",this.videoInfo)
             this.currentVideoUrl = this.videoInfo.videoM3U8Url;
             this.likeCount = this.videoInfo.videLikeCount;
             this.collectCount = this.videoInfo.videoCollectCount;
+            this.commentCount = this.videoInfo.videoCommentCount;
             this.isVideoLike();
             this.isVideoCollect();
             this.loadVideo();
@@ -196,6 +199,44 @@ export default {
         console.log("错误信息=>", error)
         alert("网络异常")
       })
+    },
+    handleCommentLike(item){
+      // alert(item.isLike)
+      if (!item.isLike) {
+        axios.put("http://localhost:10002/comment/addCommentLikeCount?commentId=" + item.id)
+            .then(response => {
+              if (response.data.code === 200 && (response.data.data === true || response.data.data === 'true')) {
+                item.isLike = true;
+                item.likeCount = item.likeCount + 1;
+              } else {
+                ElMessage({
+                  showClose: true,
+                  message: '点赞失败',
+                  type: 'error',
+                })
+              }
+            }).catch(error => {
+          console.log("错误信息=>", error)
+          alert("网络异常")
+        })
+      }else {
+        axios.put("http://localhost:10002/comment/subCommentLikeCount?commentId=" + item.id)
+            .then(response => {
+              if (response.data.code === 200 && (response.data.data === true || response.data.data === 'true')) {
+                item.isLike = false;
+                item.likeCount = item.likeCount - 1;
+              } else {
+                ElMessage({
+                  showClose: true,
+                  message: '取消点赞失败',
+                  type: 'error',
+                })
+              }
+            }).catch(error => {
+          console.log("错误信息=>", error)
+          alert("网络异常")
+        })
+      }
     },
     loadCommentReply(item) {
       axios.get('http://localhost:10002/comment/getCommentReply?videoId=' + item.videoId + '&commentId=' + item.id)
@@ -257,11 +298,11 @@ export default {
                 type: 'error',
               })
             }
+            this.getRootComment();
           }).catch(error => {
         console.log("错误信息=>", error)
         alert("网络异常")
       })
-      this.getRootComment();
       this.commentInfo = ''
     },
     commentOrReply() {
@@ -312,11 +353,11 @@ export default {
                 type: 'error',
               })
             }
+            this.getRootComment();
           }).catch(error => {
         console.log("错误信息=>", error)
         alert("网络异常")
       })
-      this.getRootComment();
       this.commentInfo = ''
     },
     loadVideo() {
@@ -426,7 +467,7 @@ export default {
       axios.get('http://localhost:10002/videoLike/isLike?videoId=' + this.videoInfo.videoId)
           .then(response => {
             this.isLike = response.data.data;
-            if (this.isLike) {
+            if (this.isLike === true || this.isLike === 'true') {
               this.likeUrl = "http://localhost:10002/images/点赞(红色).png"
             } else {
               this.likeUrl = "http://localhost:10002/images/点赞(白色).png"
@@ -439,7 +480,7 @@ export default {
       axios.get('http://localhost:10002/videoCollect/isCollect?videoId=' + this.videoInfo.videoId)
           .then(response => {
             this.isCollect = response.data.data;
-            if (this.isCollect) {
+            if (this.isCollect === true || this.isCollect === 'true') {
               this.collectUrl = "http://localhost:10002/images/收藏(黄色).png"
             } else {
               this.collectUrl = "http://localhost:10002/images/收藏(白色).png"
