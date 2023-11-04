@@ -24,6 +24,6 @@ export default {
 <style scoped>
 .video-content {
   height: 100%;
-  background-color: cadetblue;
+  //background-color: cadetblue;
 }
 </style>
