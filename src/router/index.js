@@ -68,7 +68,7 @@ const router = createRouter({
 // 路由前置守卫
 router.beforeEach((to, from) => {
     // 通过路由配置来判断是否需要登录
-    if (to.meta.requiresLogin && !localStorage.getItem('access_token')) {
+    if (to.meta.requiresLogin && !store.state.isLogin) {
         store.state.loginActive = true; // 弹出登录页面
         return false;
     }

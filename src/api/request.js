@@ -25,6 +25,22 @@ export function login(user) {
     })
 }
 
+// 验证 token
+export function checkToken() {
+    return Service({
+        url: '/api/user/verify',
+        method: 'post',
+    })
+}
+
+// 用户退出
+export function userLogout() {
+    return Service({
+        url: '/api/user/loginOut',
+        method: 'post',
+    })
+}
+
 // 随机获取一个视频
 export function randomVideo() {
     return Service({
@@ -33,13 +49,6 @@ export function randomVideo() {
     })
 }
 
-// 验证 token
-export function checkToken() {
-    return Service({
-        url: '/api/user/verify',
-        method: 'post',
-    })
-}
 
 // POST验证
 export function getMessage() {
@@ -49,9 +58,24 @@ export function getMessage() {
     })
 }
 
-export function addNewAndroidPlugin(data) {
+// 获取七牛云Token
+export function getQiNiuToken(fileName) {
     return Service({
-        url: '/manager/addAndroidPlguin',
-        data: JSON.stringify(data)
+        url: '/api/video/getQiNiuToken',
+        data: {
+            fileName: fileName,
+        },
+        method: 'post',
+    })
+}
+
+// 保存视频
+export function saveVideoMetadata(VideoMetadata) {
+    return Service({
+        url: '/api/video/save',
+        data: {
+            ...VideoMetadata
+        },
+        method: 'post',
     })
 }

@@ -632,16 +632,16 @@ export default {
   color: white;
 }
 
-/deep/ .el-input__wrapper {
+:deep(.el-input__wrapper) {
   background-color: #65676c;
   box-shadow: none;
 }
 
-/deep/ .el-input {
+:deep(.el-input) {
   --el-input-focus-border-color: none;
 }
 
-/deep/ .el-input__inner {
+:deep(.el-input__inner) {
   caret-color: whitesmoke;
   color: whitesmoke;
 }

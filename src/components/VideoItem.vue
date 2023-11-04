@@ -21,18 +21,6 @@
           </td>
         </tr>
       </table>
-      <!--      <div>-->
-      <!--        <el-text>{{ videoData.title }}</el-text>-->
-      <!--      </div>-->
-      <!--      <div class="video-auth">-->
-      <!--        <div>-->
-      <!--          <el-link :underline="false">@{{ videoData.auth }}</el-link>-->
-      <!--        </div>-->
-      <!--        <div style="margin-left: 10px">-->
-      <!--          <el-text>{{ videoData.publishTime }}</el-text>-->
-      <!--        </div>-->
-      <!--      </div>-->
-
     </div>
   </div>
 </template>

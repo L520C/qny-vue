@@ -12,7 +12,7 @@
           <el-main style="overflow: hidden;margin-top: 0;padding-top: 0">
             <router-view style="height: calc(100vh - 64px); overflow: auto;"></router-view>
             <!-- 登录弹窗 -->
-            <el-dialog v-model="active">
+            <el-dialog v-model="active" width="400px">
               <self-dialog/>
             </el-dialog>
           </el-main>
@@ -20,23 +20,6 @@
         </el-container>
       </el-container>
     </el-container>
-    <!--    <el-container style="height: 100vh;">-->
-    <!--      <el-aside width="200px">-->
-    <!--        <Sidebar/>-->
-    <!--      </el-aside>-->
-    <!--      <el-container>-->
-    <!--        <el-header style="margin-bottom: 0;padding-bottom: 0">-->
-    <!--          <Header/>-->
-    <!--        </el-header>-->
-    <!--        <el-main style="overflow: hidden;margin-top: 0;padding-top: 0">-->
-    <!--          <router-view style="height: calc(100vh - 64px); overflow: auto;"></router-view>-->
-    <!--          &lt;!&ndash; 登录弹窗 &ndash;&gt;-->
-    <!--          <el-dialog v-model="active">-->
-    <!--            <self-dialog/>-->
-    <!--          </el-dialog>-->
-    <!--        </el-main>-->
-    <!--      </el-container>-->
-    <!--    </el-container>-->
   </div>
 </template>
 
@@ -64,6 +47,9 @@ export default {
       }
     }
   },
+  data() {
+    return {}
+  },
   mounted() {
     this.isLogin();
   },
@@ -78,12 +64,14 @@ export default {
       }
       // 验证token
       checkToken().then(res => {
-        if (res.code === 500) {
+        if (res.code === 200) { // 登录成功
+          this.$store.state.isLogin = true;
+        } else {
           console.log(res.data);
           this.$store.state.loginActive = true;
         }
       }).catch(err => {
-        console.log(err);
+        console.log("验证失败=>", err);
         this.$store.state.loginActive = true;
       })
     }

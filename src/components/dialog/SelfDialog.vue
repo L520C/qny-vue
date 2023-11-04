@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import {ref} from "vue";
 import LoginForm from "@/components/dialog/LoginForm.vue";
 import RegisterForm from "@/components/dialog/RegisterForm.vue";
 

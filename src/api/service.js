@@ -30,17 +30,17 @@ Service.interceptors.request.use(config => {
 
 // 添加响应拦截器
 Service.interceptors.response.use(response => {
-    loadingInstance.close()
-    // console.log(response)
-    return response.data
-}, error => {
-    console.log('TCL: error', error)
-    const msg = error.Message !== undefined ? error.Message : ''
-    ElMessage({
-        message: '网络错误' + msg,
-        type: 'error',
-        duration: 3 * 1000
-    })
-    loadingInstance.close()
-    return Promise.reject(error)
+    loadingInstance.close(); // 关闭加载页面
+    return response.data; // 返回数据
+}, error => { // 响应报错
+    // console.log('TCL: error', error)
+    // const msg = error.Message !== undefined ? error.Message : ''
+    // ElMessage({
+    //     message: '网络错误' + msg,
+    //     type: 'error',
+    //     duration: 3 * 1000
+    // })
+    // loadingInstance.close()
+    // return Promise.reject(error)
+    loadingInstance.close();
 })
