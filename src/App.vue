@@ -96,7 +96,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #1A1A1A; /* 使用深灰色作为背景颜色 */
+  background-color: #252632; /* 使用深灰色作为背景颜色 */
   font-family: Arial, sans-serif; /* 设置字体 */
   color: #fff; /* 设置文本颜色为白色 */
 }
