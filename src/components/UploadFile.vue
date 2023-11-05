@@ -39,7 +39,6 @@
         <el-button native-type="reset">取消</el-button>
       </el-form-item>
     </el-form>
-
   </div>
 </template>
 
@@ -69,13 +68,14 @@ export default {
         tags: [],
       },
       videoFile: {},
-      defaultTags: ['体育', '知识']
+      defaultTags: ['体育', '知识'],
     }
   },
   methods: {
     fileChange(file) {
+      console.log(file);
       this.videoFile = file;
-      console.log(file.name);
+      console.log(file);
       getQiNiuToken(file.name).then(res => {
         console.log("获取到token", res);
         this.uploadVideo(file, res.data);
@@ -84,12 +84,16 @@ export default {
       })
     },
     async uploadVideo(file, data) {
+      const headers = QiNiu.getHeadersForChunkUpload(data.token)
+      console.log("headers", headers);
+      this.progressFlag = true;
       // 实例化七牛云的上传实例
-      const observable = QiNiu.upload(file, data.key, data.token, null, config);
+      const observable = QiNiu.upload(file.raw, data.key, data.token, null, config);
 
       const observer = { //   设置实例的监听对象
         next(res) { //   接收上传进度信息
           const filePercent = parseInt(res.total.percent); // 上传进度
+          this.loadProgress = filePercent;
           console.log(filePercent + '%');
           if (filePercent === 100) {
             console.log("success")
@@ -99,7 +103,6 @@ export default {
           console.log(err)
         },
         complete(res) { // 接收上传完成后的信息
-          console.log(uploadState);
           videoKey = res.key;
           uploadState = true;
           console.log('视频上传成功');
@@ -116,7 +119,7 @@ export default {
           description: this.form.description,
           uploadTime: moment.utc(new Date()).local().format('YYYY-MM-DD HH:mm:ss'),
           duration: '1200',
-          filePath: 'http://s32r2vddr.hn-bkt.clouddn.com' + videoKey,
+          filePath: 'http://s32r2vddr.hn-bkt.clouddn.com/' + videoKey.replace(/.[^/.]+$/, '.m3u8'),
           format: this.videoFile.raw.type,
           fileSize: this.videoFile.size,
           tags: this.form.tags.join(','),

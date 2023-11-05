@@ -61,7 +61,6 @@ export default {
 .all {
   height: 100%;
   width: 100%;
-  //background-color: darkgray;
   display: flex;
   flex-direction: row;
 }
@@ -72,7 +71,6 @@ export default {
 }
 
 .video-content {
-  //display: flex;
   justify-content: center;
 }
 

@@ -7,17 +7,17 @@
 
     <div class="video-message">
       <table>
-        <tr rowspan="2">
+        <tr>
           <td colspan="2">
-            <el-text>{{ videoData.title }} xxxxxx</el-text>
+            <el-text>{{ videoData.videoTitle }}</el-text>
           </td>
         </tr>
         <tr>
           <td>
-            <el-link :underline="false">@{{ videoData.auth }}</el-link>
+            <el-link :underline="false">@{{ videoData.videoAuthor }}</el-link>
           </td>
           <td>
-            <el-text>{{ videoData.publishTime }}</el-text>
+            <el-text>{{ videoData.timeDesc }}</el-text>
           </td>
         </tr>
       </table>
@@ -31,22 +31,35 @@ import {randomVideo} from "@/api/request"; // 使用封装好的axios
 
 export default {
   name: "VideoItem",
+  props: {
+    videoData: {
+      required: true,
+      type: Object,
+      default: () => {
+        return {
+          videoId: 0,
+          videoAuthor: 'auth', // 作者名字
+          publishTime: '10小时前', // 发布时间间隔
+          videoTitle: '视频描述', // 视频描述
+          videoM3U8Url: '', // 视频地址
+          timeDesc: '三天前', // 时间描述
+        }
+      }
+    }
+  },
   data() {
     return {
-      videoData: {
-        id: 0,
-        auth: 'auth', // 作者名字
-        publishTime: '10小时前', // 发布时间间隔
-        title: '视频描述', // 视频描述
-        currentVideoUrl: '', // 视频地址
-      },
       showCover: true,
       hls: null,
       coverSrc: 'https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/ironMan.jpg',
     };
   },
   mounted() {
-    this.loadContent();
+    // this.loadContent();
+    this.loadVideo();
+  },
+  created() {
+
   },
   beforeDestroy() {
     if (this.hls) {
@@ -68,8 +81,9 @@ export default {
       })
     },
     loadVideo() {
+      console.log("video-item 接收到数据", this.videoData);
       const video = this.$refs.video;
-      const videoUrl = this.videoData.currentVideoUrl;
+      const videoUrl = this.videoData.videoM3U8Url;
 
       // video.onloadeddata = () => {
       //   video.play().catch(error => {
@@ -109,7 +123,7 @@ export default {
 
 .video-all {
   border-radius: 5px; /*圆角*/
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(231, 222, 222, 0.1);
   display: flex;
   flex-direction: column;
 //align-items: center;
@@ -117,13 +131,18 @@ export default {
 
 .video-area {
   width: 100%;
-  height: 70%;
+  height: 180px;
   border-radius: 5px; /*圆角*/
 }
 
 .video-player {
   width: 100%;
   height: auto;
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
 }
 
 .video-message {

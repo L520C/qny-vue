@@ -79,3 +79,11 @@ export function saveVideoMetadata(VideoMetadata) {
         method: 'post',
     })
 }
+
+// 获取体育视频
+export function getPhysicalCultureVideo() {
+    return Service({
+        url: '/api/video/getPhysicalCultureVideo',
+        method: 'get',
+    });
+}

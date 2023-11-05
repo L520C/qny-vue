@@ -12,7 +12,7 @@
           <el-main style="overflow: hidden;margin: 0;padding: 0">
             <router-view style="height: calc(100vh - 64px); overflow: auto;"></router-view>
             <!-- 登录弹窗 -->
-            <el-dialog v-model="active" width="400px">
+            <el-dialog v-model="active" width="400px" style="background-color: rgb(37, 38, 50)">
               <self-dialog/>
             </el-dialog>
           </el-main>
