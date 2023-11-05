@@ -9,16 +9,24 @@
         <span class="el-icon-search" style="font-size: 16px; font-weight: bold">搜索</span>
       </el-button>
     </div>
-    <div class="button">
-      <div>
+    <div class="right-area">
+      <el-text class="options-area" @click="toUpload">
+        <el-icon>
+          <DocumentAdd/>
+        </el-icon>
+        投稿
+      </el-text>
+      <div class="login-area">
         <div v-if="showLogin">
-          <el-button class="login">
-            <el-icon style="font-size: 22px"><Stamp /></el-icon>
+          <el-button class="login" @click="userLogin">
+            <el-icon style="font-size: 22px">
+              <Stamp/>
+            </el-icon>
             登录
           </el-button>
         </div>
-        <div v-else>
-          <el-avatar :size="100" :src="circleUrl"/>
+        <div v-else class="avatar-style">
+          <el-avatar :size="50" :src="circleUrl"/>
         </div>
       </div>
     </div>
@@ -26,25 +34,38 @@
 </template>
 
 <script>
-import { Search } from '@element-plus/icons-vue'
+import {Search} from '@element-plus/icons-vue'
 
 export default {
   computed: {
     Search() {
       return Search
+    },
+    showLogin: {
+      get() {
+        return !this.$store.state.isLogin;
+      },
+      set(value) {
+        this.$store.state.isLogin = !value;
+      }
     }
   },
   data() {
     return {
       input: '',
       hovering: false,
-      showLogin: true,
       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
     };
   },
   methods: {
     searchVideo() {
       this.$router.push('/search');
+    },
+    userLogin() {
+      this.$store.state.loginActive = true;
+    },
+    toUpload() {
+      this.$router.push('/uploadFile');
     }
   }
 };
@@ -67,9 +88,11 @@ export default {
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 10px;
 }
-.search:hover{
+
+.search:hover {
   border: 2px solid rgba(255, 255, 255, 0.9);
-  .searchButton{
+
+  .searchButton {
     color: black;
     background-color: rgba(255, 255, 255, 0.9);
   }
@@ -86,28 +109,53 @@ export default {
   border: none;
   background: transparent;
 }
-.searchButton:hover{
+
+.searchButton:hover {
   color: black;
   background-color: white;
 }
 
-/deep/ .el-input__wrapper {
+:deep(.el-input__wrapper) {
   background-color: transparent;
   border: none !important;
   box-shadow: none;
 }
-.el-input{
-  --el-input-focus-border:none;
-  --el-input-focus-border-color:none;
-  --el-input-hover-border:none;
-  --el-input-hover-border-color:none;
-  --el-input-text-color:white;
+
+.el-input {
+  --el-input-focus-border: none;
+  --el-input-focus-border-color: none;
+  --el-input-hover-border: none;
+  --el-input-hover-border-color: none;
+  --el-input-text-color: white;
 }
-/deep/ .el-input__inner{
+
+:deep(.el-input__inner) {
   font-size: 15px;
   caret-color: red;
 }
-.login{
+
+.right-area {
+  display: flex;
+}
+
+.options-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+//justify-content: center;
+}
+
+.options-area:hover {
+  color: white;
+}
+
+.login-area {
+  width: 100px;
+  margin-left: 10px;
+  text-align: center;
+}
+
+.login {
   width: 100px;
   background-color: #fe2c55;
   border-radius: 12px;
@@ -115,9 +163,9 @@ export default {
   border: none;
   color: white;
 }
-.login:hover{
+
+.login:hover {
   color: white;
   background-color: rgba(254, 44, 85, 0.6);
 }
-
 </style>

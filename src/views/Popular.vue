@@ -61,7 +61,7 @@ export default {
 .all {
   height: 100%;
   width: 100%;
-  background-color: darkgray;
+  //background-color: darkgray;
   display: flex;
   flex-direction: row;
 }
