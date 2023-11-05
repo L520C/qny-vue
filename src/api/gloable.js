@@ -9,9 +9,3 @@ axios.interceptors.request.use(config => {
     config.headers['Authorization'] = localStorage.getItem('access_token');
     return config;
 })
-
-// 添加响应拦截器
-axios.interceptors.response.use(response => {
-    return response.data; // 返回数据
-}, error => { // 响应报错
-})

@@ -18,7 +18,7 @@
           <img :src=collectUrl alt="collect" class="icon">
           <span class="count">{{ collectCount }}</span>
         </div>
-        <div class="interaction" @click="shareVideo" @mouseenter="shareDialog=true">
+        <div class="interaction" @click="shareVideo" @mouseenter="handleShare">
           <img src="@/assets/image/video/分享(白色).png" alt="share" class="icon">
           <span class="count">{{ shareCount }}</span>
         </div>
@@ -29,24 +29,25 @@
                 placeholder="搜索"
                 :prefix-icon="Search"
                 style="height: 70%;width: 90%"
+                @keyup.enter="searchUser"
             />
           </div>
           <div class="shareDialogContent">
             <div style="height: 20px"><span class="footText">分享给朋友</span></div>
             <div class="shareFriends">
 
-              <div class="shareFriendsItem" v-for="n in 10" :key="n">
+              <div class="shareFriendsItem" v-for="user in followUsers" :key="user.userId">
                 <div class="friendInfo">
                   <div class="friendInfoAvatar">
-                    <img src="@/assets/image/video/路飞头像.png" alt="avatar" class="avatar">
+                    <img :src="user.icon" alt="avatar" class="avatar">
                   </div>
                   <div class="friendInfoStatus">
-                    <span style="font-size: 14px;">秃头披风侠</span>
-                    <span style="font-size: 13px;color: #6d7070">在线</span>
+                    <span style="font-size: 14px;">{{user.name}}</span>
+                    <span style="font-size: 13px;color: #6d7070">{{ user.status }}</span>
                   </div>
                 </div>
                 <div class="shareControl">
-                  <el-button color="#ff2c55" size="large"  @click="shareToFriend">分享</el-button>
+                  <el-button color="#ff2c55" :disabled="user.show" size="large"  @click="shareToFriend(user)">分享</el-button>
                 </div>
               </div>
             </div>
@@ -229,7 +230,8 @@ export default {
       replyRootId: '',
       commentReplyInfoList: [],
       shareDialog: false,
-      shareDialogInput: ''
+      shareDialogInput: '',
+      followUsers:[]
     };
   },
   mounted() {
@@ -259,8 +261,35 @@ export default {
         alert("网络异常")
       })
     },
-    shareToFriend(){
-
+    handleShare(){
+      this.shareDialog=true
+      axios.get("/api/video/userFollow/allFollowInfo")
+          .then(response => {
+            this.followUsers = response.data.data;
+          }).catch(error => {
+        console.log("错误信息=>", error)
+        ElMessage({
+          showClose: true,
+          message: '网络异常',
+          type: 'error',
+        })
+      })
+    },
+    searchUser(){
+      axios.get("/api/video/userFollow/searchFollow?name="+this.shareDialogInput)
+          .then(response => {
+            this.followUsers = response.data.data;
+          }).catch(error => {
+        console.log("错误信息=>", error)
+        ElMessage({
+          showClose: true,
+          message: '网络异常',
+          type: 'error',
+        })
+      })
+    },
+    shareToFriend(user){
+      user.show = true;
     },
     handleCommentLike(item) {
       // alert(item.isLike)
