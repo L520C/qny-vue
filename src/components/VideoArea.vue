@@ -105,7 +105,7 @@
                 </div>
                 <div class="commentIcon" @click="handleCommentLike(item)">
                   <img
-                      :src="item.isLike ? 'http://localhost:10002/images/点赞(红色).png':'http://localhost:10002/images/爱心(评论区未点赞).png'"
+                      :src="item.isLike ? '/api/video/images/点赞(红色).png':'/api/video/images/爱心(评论区未点赞).png'"
                       class="icon"
                       style="height: 20px;width: 20px" alt="like">
                   <div style="font-size: 14px; margin-left: 1px">{{ item.likeCount }}</div>
@@ -153,7 +153,7 @@
                       </div>
                       <div class="commentIcon" @click="handleCommentLike(replyItem)">
                         <img
-                            :src="replyItem.isLike ? 'http://localhost:10002/images/点赞(红色).png':'http://localhost:10002/images/爱心(评论区未点赞).png'"
+                            :src="replyItem.isLike ? '/api/video/images/点赞(红色).png':'/api/video/images/爱心(评论区未点赞).png'"
                             class="icon"
                             style="height: 20px;width: 20px" alt="like">
                         <div style="font-size: 14px; margin-left: 1px">{{ replyItem.likeCount }}</div>
@@ -212,12 +212,12 @@ export default {
       hls: null,
       likeCount: 0,
       isLike: false,
-      likeUrl: 'http://localhost:10002/images/点赞(白色).png',
+      likeUrl: '/api/video/images/点赞(白色).png',
       commentCount: 0,
       shareCount: 0,
       collectCount: 0,
       isCollect: false,
-      collectUrl: 'http://localhost:10002/images/收藏(白色).png',
+      collectUrl: '/api/video/images/收藏(白色).png',
       videoInfo: {},
       showComment: false,
       showReply: false,
@@ -242,7 +242,7 @@ export default {
   },
   methods: {
     fetchVideoUrl() {
-      axios.get('http://localhost:10002/video/randomVideo')
+      axios.get('/api/video/video/randomVideo')
           .then(response => {
             this.videoInfo = response.data.data;
             // console.log("response.data.data=>", response.data.data)
@@ -265,7 +265,7 @@ export default {
     handleCommentLike(item) {
       // alert(item.isLike)
       if (!item.isLike) {
-        axios.put("http://localhost:10002/comment/addCommentLikeCount?commentId=" + item.id)
+        axios.put("/api/video/comment/addCommentLikeCount?commentId=" + item.id)
             .then(response => {
               if (response.data.code === 200 && (response.data.data === true || response.data.data === 'true')) {
                 item.isLike = true;
@@ -282,7 +282,7 @@ export default {
           alert("网络异常")
         })
       } else {
-        axios.put("http://localhost:10002/comment/subCommentLikeCount?commentId=" + item.id)
+        axios.put("/api/video/comment/subCommentLikeCount?commentId=" + item.id)
             .then(response => {
               if (response.data.code === 200 && (response.data.data === true || response.data.data === 'true')) {
                 item.isLike = false;
@@ -301,7 +301,7 @@ export default {
       }
     },
     loadCommentReply(item) {
-      axios.get('http://localhost:10002/comment/getCommentReply?videoId=' + item.videoId + '&commentId=' + item.id)
+      axios.get('/api/video/comment/getCommentReply?videoId=' + item.videoId + '&commentId=' + item.id)
           .then(response => {
             if (response.data.code === 200) {
               this.commentReplyInfoList = response.data.data
@@ -345,7 +345,7 @@ export default {
         'rootId': this.replyRootId,
         'parentId': this.replyId
       }
-      axios.post('http://localhost:10002/comment/save', sendData)
+      axios.post('/api/video/comment/save', sendData)
           .then(response => {
             if (response.data.code === 200) {
               ElMessage({
@@ -376,7 +376,7 @@ export default {
       this.replying = false;
     },
     getRootComment() {
-      axios.get('http://localhost:10002/comment/getRootComment?videoId=' + this.videoInfo.videoId)
+      axios.get('/api/video/comment/getRootComment?videoId=' + this.videoInfo.videoId)
           .then(response => {
             if (response.data.code === 200) {
               this.videoCommentVO = response.data.data;
@@ -400,7 +400,7 @@ export default {
         'rootId': '',
         'parentId': ''
       }
-      axios.post('http://localhost:10002/comment/save', sendData)
+      axios.post('/api/video/comment/save', sendData)
           .then(response => {
             if (response.data.code === 200) {
               ElMessage({
@@ -450,11 +450,11 @@ export default {
     },
     likeVideo() {
       if (this.isLike) {
-        axios.put("http://localhost:10002/videoLike/subLikeCount?videoId=" + this.videoInfo.videoId)
+        axios.put("/api/video/videoLike/subLikeCount?videoId=" + this.videoInfo.videoId)
             .then(response => {
               if (response.data.code === 200) {
                 this.isLike = false;
-                this.likeUrl = 'http://localhost:10002/images/点赞(白色).png';
+                this.likeUrl = '/api/video/images/点赞(白色).png';
                 this.getLikeCount();
               }
             }).catch(error => {
@@ -463,11 +463,11 @@ export default {
         })
 
       } else {
-        axios.put("http://localhost:10002/videoLike/addLikeCount?videoId=" + this.videoInfo.videoId)
+        axios.put("/api/video/videoLike/addLikeCount?videoId=" + this.videoInfo.videoId)
             .then(response => {
               if (response.data.code === 200) {
                 this.isLike = true;
-                this.likeUrl = 'http://localhost:10002/images/点赞(红色).png';
+                this.likeUrl = '/api/video/images/点赞(红色).png';
                 this.getLikeCount();
               }
             }).catch(error => {
@@ -478,11 +478,11 @@ export default {
 
     collectVideo() {
       if (this.isCollect) {
-        axios.put("http://localhost:10002/videoCollect/subCollectCount?videoId=" + this.videoInfo.videoId)
+        axios.put("/api/video/videoCollect/subCollectCount?videoId=" + this.videoInfo.videoId)
             .then(response => {
               if (response.data.code === 200) {
                 this.isCollect = false;
-                this.collectUrl = 'http://localhost:10002/images/收藏(白色).png';
+                this.collectUrl = '/api/video/images/收藏(白色).png';
                 this.getCollectCount();
               }
             }).catch(error => {
@@ -491,11 +491,11 @@ export default {
         })
 
       } else {
-        axios.put("http://localhost:10002/videoCollect/addCollectCount?videoId=" + this.videoInfo.videoId)
+        axios.put("/api/video/videoCollect/addCollectCount?videoId=" + this.videoInfo.videoId)
             .then(response => {
               if (response.data.code === 200) {
                 this.isCollect = true;
-                this.collectUrl = 'http://localhost:10002/images/收藏(黄色).png';
+                this.collectUrl = '/api/video/images/收藏(黄色).png';
                 this.getCollectCount();
               }
             }).catch(error => {
@@ -505,7 +505,7 @@ export default {
     },
 
     getLikeCount() {
-      axios.get('http://localhost:10002/videoLike/getLikeCount?videoId=' + this.videoInfo.videoId)
+      axios.get('/api/video/videoLike/getLikeCount?videoId=' + this.videoInfo.videoId)
           .then(response => {
             if (response.data.code === 200) {
               this.likeCount = response.data.data;
@@ -515,7 +515,7 @@ export default {
       })
     },
     getCollectCount() {
-      axios.get('http://localhost:10002/videoCollect/getCollectCount?videoId=' + this.videoInfo.videoId)
+      axios.get('/api/video/videoCollect/getCollectCount?videoId=' + this.videoInfo.videoId)
           .then(response => {
             if (response.data.code === 200) {
               this.collectCount = response.data.data;
@@ -526,26 +526,26 @@ export default {
     },
 
     isVideoLike() {
-      axios.get('http://localhost:10002/videoLike/isLike?videoId=' + this.videoInfo.videoId)
+      axios.get('/api/video/videoLike/isLike?videoId=' + this.videoInfo.videoId)
           .then(response => {
             this.isLike = response.data.data;
             if (this.isLike === true || this.isLike === 'true') {
-              this.likeUrl = "http://localhost:10002/images/点赞(红色).png"
+              this.likeUrl = "/api/video/images/点赞(红色).png"
             } else {
-              this.likeUrl = "http://localhost:10002/images/点赞(白色).png"
+              this.likeUrl = "/api/video/images/点赞(白色).png"
             }
           }).catch(error => {
         console.log("错误信息=>", error)
       })
     },
     isVideoCollect() {
-      axios.get('http://localhost:10002/videoCollect/isCollect?videoId=' + this.videoInfo.videoId)
+      axios.get('/api/video/videoCollect/isCollect?videoId=' + this.videoInfo.videoId)
           .then(response => {
             this.isCollect = response.data.data;
             if (this.isCollect === true || this.isCollect === 'true') {
-              this.collectUrl = "http://localhost:10002/images/收藏(黄色).png"
+              this.collectUrl = "/api/video/images/收藏(黄色).png"
             } else {
-              this.collectUrl = "http://localhost:10002/images/收藏(白色).png"
+              this.collectUrl = "/api/video/images/收藏(白色).png"
             }
           }).catch(error => {
         console.log("错误信息=>", error)
@@ -574,7 +574,7 @@ export default {
 }
 .container {
   //width: 100%;
-  height: 100%;
+  //height: 100%;
   //overflow: hidden;
   //background-color: #000;
   border-radius: 40px;
@@ -589,8 +589,14 @@ export default {
   height: 100%;
   width: 100%;
   border-radius: 30px;
-  background-color: rgba(85, 82, 82, 0.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background-color: rgba(85, 82, 82, 0.3);
+  /* 在四个方向上添加阴影来创造出3D立体效果 */
+  box-shadow:
+      2px 2px 2px rgba(85, 82, 82, 0.1), /* 右下阴影 */
+      -2px -2px 2px rgba(85, 82, 82, 0.1), /* 左上阴影 */
+      -2px 2px 2px rgba(85, 82, 82, 0.1), /* 左下阴影 */
+      2px -2px 2px rgba(85, 82, 82, 0.1); /* 右上阴影 */
+  margin-left: 2px;
 }
 
 
@@ -752,7 +758,7 @@ export default {
 }
 
 /deep/ .el-input__wrapper {
-  background-color: rgba(130, 130, 130, 0.4);
+  background-color: rgba(50, 50, 50, 0.9);
   box-shadow: none;
 }
 

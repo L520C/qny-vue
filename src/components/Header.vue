@@ -10,12 +10,23 @@
       </el-button>
     </div>
     <div class="right-area">
-      <el-text class="options-area" @click="toUpload">
-        <el-icon>
-          <DocumentAdd/>
-        </el-icon>
-        投稿
-      </el-text>
+      <div class="optionBox" @click="toChat">
+        <el-text class="options-area">
+          <el-icon style="font-size: 20px;margin-bottom: 3px">
+            <ChatLineSquare/>
+          </el-icon>
+          私信
+        </el-text>
+        <Chat v-if="showChat"/>
+      </div>
+      <div class="optionBox" @click="toUpload">
+        <el-text class="options-area">
+          <el-icon style="font-size: 20px;margin-bottom: 3px">
+            <DocumentAdd/>
+          </el-icon>
+          投稿
+        </el-text>
+      </div>
       <div class="login-area">
         <div v-if="showLogin">
           <el-button class="login" @click="userLogin">
@@ -35,8 +46,10 @@
 
 <script>
 import {Search} from '@element-plus/icons-vue'
+import Chat from "@/components/Chat.vue";
 
 export default {
+  components: {Chat},
   computed: {
     Search() {
       return Search
@@ -54,7 +67,8 @@ export default {
     return {
       input: '',
       hovering: false,
-      circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+      circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+      showChat:false
     };
   },
   methods: {
@@ -66,6 +80,9 @@ export default {
     },
     toUpload() {
       this.$router.push('/uploadFile');
+    },
+    toChat() {
+      this.showChat = !this.showChat
     }
   }
 };
@@ -78,6 +95,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 .logo {
@@ -87,6 +105,10 @@ export default {
 .search {
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 10px;
+  position: absolute; /* 绝对定位 */
+  top: 50%; /* 父元素高度的50%处 */
+  left: 50%; /* 父元素宽度的50%处 */
+  transform: translate(-50%, -50%); /* 向上和向左各偏移自身尺寸的50% */
 }
 
 .search:hover {
@@ -142,11 +164,26 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-//justify-content: center;
+//justify-content: center; font-size: 12px;
 }
 
-.options-area:hover {
-  color: white;
+.optionBox {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+  position: relative;
+}
+
+.optionBox:hover {
+  .options-area {
+    color: white;
+
+  }
+
+  cursor: pointer;
+  position: relative;
 }
 
 .login-area {

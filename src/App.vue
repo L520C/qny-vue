@@ -1,7 +1,7 @@
 <template>
   <div class="full-screen-layout">
     <el-container style="height: 100vh;">
-      <el-header style="height:68px;margin-bottom: 10px;padding-bottom: 0">
+      <el-header style="height:75px;padding-bottom: 0">
         <Header/>
       </el-header>
       <el-container>
