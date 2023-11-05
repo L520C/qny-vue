@@ -1,44 +1,24 @@
 <template>
   <div class="all">
-    <!-- logo图片 -->
     <div class="logo">
-      <el-image :src="logoUrl" fit="fill"></el-image>
+      <img style="height: 30px;" src="@/assets/image/logo.png" alt="logo"/>
     </div>
-    <!-- 搜索框 -->
     <div class="search">
-      <el-input v-model="input" placeholder="请输入搜索内容" clearable
-                style="width: 400px; height: 40px; background-color: black;"/>
-      <el-button style="height: 40px;" @click="searchVideo">
-        <i class="el-icon-search" style="font-size: 14px; margin-right: 5px;"></i>搜索
+      <el-input v-model="input" placeholder="请输入搜索内容" clearable class="searchInput"/>
+      <el-button class="searchButton" @click="searchVideo" :icon="Search" style="font-size: 20px">
+        <span class="el-icon-search" style="font-size: 16px; font-weight: bold">搜索</span>
       </el-button>
     </div>
-    <!-- 右边个人头像，已经上传视频 -->
     <div class="button">
       <div>
-        <el-button @click="videoUpload">
-          <el-text>
-            <el-icon>
-              <CirclePlus/>
-            </el-icon>
-          </el-text>
-          <el-text>投稿</el-text>
-        </el-button>
-      </div>
-      <div class="auth-style">
-        <div v-if="!isLogin">
-          <el-button @click="userLogin">登录</el-button>
+        <div v-if="showLogin">
+          <el-button class="login">
+            <el-icon style="font-size: 22px"><Stamp /></el-icon>
+            登录
+          </el-button>
         </div>
         <div v-else>
-          <el-popover placement="bottom" :width="300" trigger="hover" effect="dark" :show-arrow="false">
-            <template #reference>
-              <div>
-                <el-avatar :size="50" :src="circleUrl"/>
-              </div>
-            </template>
-            <div>
-              <el-button @click="logout">退出登录</el-button>
-            </div>
-          </el-popover>
+          <el-avatar :size="100" :src="circleUrl"/>
         </div>
       </div>
     </div>
@@ -46,51 +26,25 @@
 </template>
 
 <script>
-import {userLogout} from "@/api/request";
-import {CirclePlus} from "@element-plus/icons-vue";
+import { Search } from '@element-plus/icons-vue'
 
 export default {
-  components: {CirclePlus},
   computed: {
-    isLogin: {
-      get() {
-        return this.$store.state.isLogin;
-      },
-      set(value) {
-        this.$store.state.isLogin = value;
-      },
+    Search() {
+      return Search
     }
   },
   data() {
     return {
       input: '',
-      logoUrl: require('@/assets/logo.png'),
       hovering: false,
+      showLogin: true,
       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
     };
   },
   methods: {
     searchVideo() {
       this.$router.push('/search');
-    },
-    userLogin() {
-      this.$store.state.loginActive = true;
-    },
-    logout() {
-      // 1、向后端发送退出请求
-      userLogout().then(res => {
-        console.log("退出登录请求成功信息=> ", res);
-        this.$router.push('/');
-        location.reload(); // 2、刷新页面
-      }).catch(err => {
-        console.log("退出登录请求失败信息=> ", err);
-        this.$router.push('/');
-        location.reload(); // 2、刷新页面
-      })
-      this.$store.state.isLogin = false;
-    },
-    videoUpload() {
-      this.$router.push('/uploadFile');
     }
   }
 };
@@ -106,19 +60,64 @@ export default {
 }
 
 .logo {
-  width: 60px;
-  height: 100%;
+  margin-left: 10px;
 }
 
 .search {
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+}
+.search:hover{
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  .searchButton{
+    color: black;
+    background-color: rgba(255, 255, 255, 0.9);
+  }
 }
 
-.button {
-  display: flex;
-  align-items: center;
+.searchInput {
+  width: 350px;
+  height: 40px;
 }
 
-.auth-style {
-  margin-left: 10px;
+.searchButton {
+  color: white;
+  height: 40px;
+  border: none;
+  background: transparent;
 }
+.searchButton:hover{
+  color: black;
+  background-color: white;
+}
+
+/deep/ .el-input__wrapper {
+  background-color: transparent;
+  border: none !important;
+  box-shadow: none;
+}
+.el-input{
+  --el-input-focus-border:none;
+  --el-input-focus-border-color:none;
+  --el-input-hover-border:none;
+  --el-input-hover-border-color:none;
+  --el-input-text-color:white;
+}
+/deep/ .el-input__inner{
+  font-size: 15px;
+  caret-color: red;
+}
+.login{
+  width: 100px;
+  background-color: #fe2c55;
+  border-radius: 12px;
+  height: 40px;
+  border: none;
+  color: white;
+}
+.login:hover{
+  color: white;
+  background-color: rgba(254, 44, 85, 0.6);
+}
+
 </style>

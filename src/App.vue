@@ -1,7 +1,7 @@
 <template>
   <div class="full-screen-layout">
     <el-container style="height: 100vh;">
-      <el-header style="margin-bottom: 0;padding-bottom: 0">
+      <el-header style="height:68px;margin-bottom: 10px;padding-bottom: 0">
         <Header/>
       </el-header>
       <el-container>
@@ -9,7 +9,7 @@
           <sidebar/>
         </el-aside>
         <el-container>
-          <el-main style="overflow: hidden;margin-top: 0;padding-top: 0">
+          <el-main style="overflow: hidden;margin: 0;padding: 0">
             <router-view style="height: calc(100vh - 64px); overflow: auto;"></router-view>
             <!-- 登录弹窗 -->
             <el-dialog v-model="active" width="400px">
@@ -84,7 +84,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #1A1A1A; /* 使用深灰色作为背景颜色 */
+  background-color: #161823; /* 使用深灰色作为背景颜色 */
   font-family: Arial, sans-serif; /* 设置字体 */
   color: #fff; /* 设置文本颜色为白色 */
 }
@@ -95,5 +95,8 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+}
+.el-main{
+  padding-left: 0!important;
 }
 </style>
