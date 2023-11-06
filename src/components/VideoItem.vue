@@ -1,8 +1,8 @@
 <template>
   <div class="video-all">
     <div @mouseenter="playVideo" @mouseleave="pauseVideo" class="video-area">
-      <video v-show="!showCover" ref="video" loop muted class="video-player" :id="videoData.id"/>
-      <img v-show="showCover" class="cover" :src="coverSrc" alt="无资源">
+      <video v-show="!showCover" ref="video" loop muted :id="videoData.id" class="video-player"/>
+      <img v-show="showCover" :src="coverSrc" alt="无资源" class="cover">
     </div>
 
     <div class="video-message">
@@ -64,32 +64,14 @@ export default {
     }
   },
   methods: {
-    // async loadContent() {
-    //   // 异步获取数据
-    //   await randomVideo().then(res => {
-    //     this.videoData.id = res.data.videoId;
-    //     this.videoData.videoAuthor = res.data.videoAuthor;
-    //     this.videoData.publishTime = res.data.publishTime;
-    //     this.videoData.title = res.data.videoTitle;
-    //     this.videoData.currentVideoUrl = res.data.videoM3U8Url;
-    //     this.videoData.timeDesc = '三天前';
-    //     this.loadVideo();
-    //   }).catch(err => {
-    //     console.log(err);
-    //   })
-    // },
     loadVideo() {
       this.videoData.timeDesc = '三天前';
-      console.log("video-item 接收到数据", this.videoData);
+      let videoTitle = this.videoData.videoTitle;
+      if (videoTitle && videoTitle.length > 16) {
+        this.videoData.videoTitle = this.videoData.videoTitle.substring(0,16) + '...';
+      }
       const video = this.$refs.video;
       const videoUrl = this.videoData.videoM3U8Url;
-
-      // video.onloadeddata = () => {
-      //   video.play().catch(error => {
-      //     console.error('Playback failed:', error);
-      //   });
-      //   video.pause(); // 暂停播放
-      // };
 
       if (Hls.isSupported()) {
         if (this.hls) {
@@ -129,24 +111,26 @@ export default {
 }
 
 .video-area {
-  width: 100%;
-  height: 180px;
-  border-radius: 5px; /*圆角*/
+  width: auto;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+//align-items: center;
 }
 
 .video-player {
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 100%;
 }
 
 .cover {
-  width: 100%;
+  width: auto;
   height: 100%;
 }
 
 .video-message {
+  height: 30%;
   width: auto;
-  height: 50px;
   margin: 10px;
 }
 

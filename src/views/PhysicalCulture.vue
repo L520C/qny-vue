@@ -54,7 +54,7 @@ export default {
 
 .video-item-content {
   width: 30%;
-  height: auto;
+  height: 300px;
   float: left;
   margin: 10px;
 }
