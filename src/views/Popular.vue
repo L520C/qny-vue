@@ -44,7 +44,7 @@ export default {
     this.getRankData();
   },
   created() {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 5; i++) {
       this.getVideoData();
     }
   },
@@ -64,13 +64,14 @@ export default {
       const scrollHeight = container.scrollHeight;
       const clientHeight = container.clientHeight;
       const scrollTop = container.scrollTop;
-      const isBottom = scrollTop + clientHeight >= scrollHeight - 10; // 判断是否滚动到底部，这里设置了一个阈值，可以根据需要调整
+      const isBottom = scrollTop + clientHeight >= scrollHeight - 20; // 判断是否滚动到底部，这里设置了一个阈值，可以根据需要调整
       if (isBottom) {
-        this.addComponent();
+        alert("滑倒底部");
+        // this.addComponent();
       }
     },
     addComponent() {
-      // this.getVideoData();
+      this.getVideoData();
     },
     getRankData() {
       axios.get('/api/video/videoRank/getVideoRanking').then(res => {

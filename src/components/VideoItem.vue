@@ -9,7 +9,7 @@
       <table>
         <tr>
           <td colspan="2">
-            <el-text>{{ videoData.videoTitle }}</el-text>
+            <el-text class="video-title">{{ videoData.videoTitle }}</el-text>
           </td>
         </tr>
         <tr>
@@ -58,6 +58,14 @@ export default {
     // this.loadContent();
     this.loadVideo();
   },
+  created() {
+    this.videoData.timeDesc = '三天前';
+    let videoTitle = this.videoData.videoTitle;
+    console.log("videoItem videotitle=>", videoTitle);
+    if (videoTitle.length > 10) {
+      this.videoData.videoTitle = videoTitle.substring(0,10) + '...';
+    }
+  },
   beforeDestroy() {
     if (this.hls) {
       this.hls.destroy();
@@ -65,11 +73,7 @@ export default {
   },
   methods: {
     loadVideo() {
-      this.videoData.timeDesc = '三天前';
-      let videoTitle = this.videoData.videoTitle;
-      if (videoTitle && videoTitle.length > 16) {
-        this.videoData.videoTitle = this.videoData.videoTitle.substring(0,16) + '...';
-      }
+
       const video = this.$refs.video;
       const videoUrl = this.videoData.videoM3U8Url;
 
@@ -142,5 +146,12 @@ img {
 
 .video-auth {
 //float: left; display: flex; flex-direction: row;
+}
+
+.video-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #cbc7c7;
+  margin-bottom: 10px;
 }
 </style>

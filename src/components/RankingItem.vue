@@ -10,7 +10,7 @@ export default {
   name: "RankingItem",
   props: {
     title: String,
-    hotNum: String,
+    hotNum: Number,
   },
 }
 </script>
