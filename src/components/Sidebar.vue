@@ -19,7 +19,6 @@
       <el-menu-item index="popular" class="menu-item">热门</el-menu-item>
       <el-menu-item index="physicalCulture" class="menu-item">体育</el-menu-item>
       <el-menu-item index="knowledge" class="menu-item">知识</el-menu-item>
-      <el-menu-item index="follow" class="menu-item">直播</el-menu-item>
       <!--<el-menu-item index="follow" class="menu-item">放映厅</el-menu-item>-->
     </el-menu>
   </div>

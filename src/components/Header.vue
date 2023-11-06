@@ -10,14 +10,14 @@
       </el-button>
     </div>
     <div class="right-area">
-      <div class="optionBox" @click="toChat">
+      <div class="optionBox" @mouseenter="showChat = true" @mouseleave="showChat=false">
         <el-text class="options-area">
           <el-icon style="font-size: 20px;margin-bottom: 3px">
-            <ChatLineSquare/>
+            <View/>
           </el-icon>
-          私信
+          通知
         </el-text>
-        <Chat v-if="showChat"/>
+        <ShareVideo v-show="showChat" />
       </div>
       <div class="optionBox" @click="toUpload">
         <el-text class="options-area">
@@ -37,7 +37,7 @@
           </el-button>
         </div>
         <div v-else class="avatar-style">
-          <el-avatar :size="50" :src="circleUrl"/>
+          <el-avatar :size="40" :src="circleUrl"/>
         </div>
       </div>
     </div>
@@ -46,10 +46,10 @@
 
 <script>
 import {Search} from '@element-plus/icons-vue'
-import Chat from "@/components/Chat.vue";
+import ShareVideo from "@/components/ShareVideo.vue";
 
 export default {
-  components: {Chat},
+  components: {ShareVideo},
   computed: {
     Search() {
       return Search
@@ -81,9 +81,6 @@ export default {
     toUpload() {
       this.$router.push('/uploadFile');
     },
-    toChat() {
-      this.showChat = !this.showChat
-    }
   }
 };
 </script>
