@@ -17,7 +17,7 @@
           </el-icon>
           通知
         </el-text>
-        <ShareVideo v-show="showChat" />
+        <ShareVideo v-show="showChat"/>
       </div>
       <div class="optionBox" @click="toUpload">
         <el-text class="options-area">
@@ -37,7 +37,16 @@
           </el-button>
         </div>
         <div v-else class="avatar-style">
-          <el-avatar :size="40" :src="circleUrl"/>
+          <div class="optionBox" @mouseenter="showAvatar=true" @mouseleave="showAvatar=false">
+            <el-text class="options-area">
+              <el-avatar :size="40" :src="circleUrl"/>
+            </el-text>
+            <div v-show="showAvatar" class="logout-big">
+              <div class="logout-content" @click="logout">
+                <el-text style="color: white;">退出登录</el-text>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -47,6 +56,7 @@
 <script>
 import {Search} from '@element-plus/icons-vue'
 import ShareVideo from "@/components/ShareVideo.vue";
+import {userLogout} from "@/api/request";
 
 export default {
   components: {ShareVideo},
@@ -68,7 +78,8 @@ export default {
       input: '',
       hovering: false,
       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-      showChat:false
+      showChat: false,
+      showAvatar: false,
     };
   },
   methods: {
@@ -81,6 +92,12 @@ export default {
     toUpload() {
       this.$router.push('/uploadFile');
     },
+    logout() { // 用户退出登录
+      console.log("用户退出");
+      // userLogout().then(res => {
+      // }).catch(err => {
+      // })
+    }
   }
 };
 </script>
@@ -201,5 +218,28 @@ export default {
 .login:hover {
   color: white;
   background-color: rgba(254, 44, 85, 0.6);
+}
+
+.logout-big {
+  height: 50px;
+  width: 100px;
+  max-height: 660px;
+  max-width: 920px;
+  background-color: rgb(27, 27, 38);
+  position: absolute;
+  left: -30px;
+  bottom: -50px;
+  z-index: 1;
+  border-radius: 15px; /* 卡片边角的圆滑度 */
+  transition: box-shadow 0.3s ease-in-out; /* 阴影变化的过渡效果 */
+  /* 立体阴影效果 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), /* 较小的硬阴影 */ 0 10px 20px rgba(0, 0, 0, 0.05); /* 较大的模糊阴影 */
+}
+
+.logout-content {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 </style>

@@ -44,7 +44,7 @@ export function userLogout() {
 // 随机获取一个视频
 export function randomVideo() {
     return Service({
-        url: '/api/video/randomVideo',
+        url: '/api/video/video/randomVideo',
         method: 'get',
     })
 }
@@ -61,7 +61,7 @@ export function getMessage() {
 // 获取七牛云Token
 export function getQiNiuToken(fileName) {
     return Service({
-        url: '/api/video/getQiNiuToken',
+        url: '/api/video/video/getQiNiuToken',
         data: {
             fileName: fileName,
         },
@@ -72,7 +72,7 @@ export function getQiNiuToken(fileName) {
 // 保存视频
 export function saveVideoMetadata(VideoMetadata) {
     return Service({
-        url: '/api/video/save',
+        url: '/api/video/video/save',
         data: {
             ...VideoMetadata
         },
@@ -83,7 +83,7 @@ export function saveVideoMetadata(VideoMetadata) {
 // 获取体育视频
 export function getPhysicalCultureVideo() {
     return Service({
-        url: '/api/video/getPhysicalCultureVideo',
+        url: '/api/video/video/physicalCultureVideo',
         method: 'get',
     });
 }

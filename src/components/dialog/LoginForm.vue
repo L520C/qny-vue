@@ -61,20 +61,19 @@ export default {
       // 表单验证
       this.$refs.ruleFormRef.validate(async (valid) => {
         if (valid) { // 表单验证成功
-
           axios.post('/api/user/login', {
             name: this.formLabelAlign.name,
             password: MD5(this.formLabelAlign.password),
           }).then(res => {
-            console.log(res);
-            if (res.code === 200) {
+            console.log(res.data);
+            if (res.data.code === 200) {
               this.$store.state.isLogin = true; // 显示登录成功
-              localStorage.setItem('access_token', res.data)
+              localStorage.setItem('access_token', res.data.data)
               this.$router.push('/');
               this.$store.state.loginActive = false; // 弹窗消失
             } else { // 账号或者密码错误等信息
               ElMessage({
-                message: res.data,
+                message: res.data.data,
                 type: 'error',
                 duration: 3 * 1000
               })

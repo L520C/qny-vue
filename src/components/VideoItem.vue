@@ -17,7 +17,7 @@
             <el-link :underline="false">@{{ videoData.videoAuthor }}</el-link>
           </td>
           <td>
-            <el-text>{{ videoData.timeDesc }}</el-text>
+            <el-text>三天前</el-text>
           </td>
         </tr>
       </table>
@@ -42,7 +42,7 @@ export default {
           publishTime: '10小时前', // 发布时间间隔
           videoTitle: '视频描述', // 视频描述
           videoM3U8Url: '', // 视频地址
-          timeDesc: '三天前', // 时间描述
+          timeDesc: '', // 时间描述
         }
       }
     }
@@ -58,29 +58,28 @@ export default {
     // this.loadContent();
     this.loadVideo();
   },
-  created() {
-
-  },
   beforeDestroy() {
     if (this.hls) {
       this.hls.destroy();
     }
   },
   methods: {
-    async loadContent() {
-      // 异步获取数据
-      await randomVideo().then(res => {
-        this.videoData.id = res.data.videoId;
-        this.videoData.auth = res.data.videoAuthor;
-        this.videoData.publishTime = res.data.publishTime;
-        this.videoData.title = res.data.videoTitle;
-        this.videoData.currentVideoUrl = res.data.videoM3U8Url;
-        this.loadVideo();
-      }).catch(err => {
-        console.log(err);
-      })
-    },
+    // async loadContent() {
+    //   // 异步获取数据
+    //   await randomVideo().then(res => {
+    //     this.videoData.id = res.data.videoId;
+    //     this.videoData.videoAuthor = res.data.videoAuthor;
+    //     this.videoData.publishTime = res.data.publishTime;
+    //     this.videoData.title = res.data.videoTitle;
+    //     this.videoData.currentVideoUrl = res.data.videoM3U8Url;
+    //     this.videoData.timeDesc = '三天前';
+    //     this.loadVideo();
+    //   }).catch(err => {
+    //     console.log(err);
+    //   })
+    // },
     loadVideo() {
+      this.videoData.timeDesc = '三天前';
       console.log("video-item 接收到数据", this.videoData);
       const video = this.$refs.video;
       const videoUrl = this.videoData.videoM3U8Url;

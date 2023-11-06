@@ -68,7 +68,7 @@ export default {
         tags: [],
       },
       videoFile: {},
-      defaultTags: ['体育', '知识'],
+      defaultTags: ['体育', '书籍'],
     }
   },
   methods: {

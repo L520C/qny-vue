@@ -24,6 +24,7 @@
 <script>
 import VideoItem from "@/components/VideoItem.vue";
 import UserLike from "@/components/user/UserLike.vue";
+
 export default {
   name: "UserVideo",
   components: {VideoItem, UserLike},
@@ -46,5 +47,9 @@ export default {
   height: 20%;
   float: left;
   margin: 10px;
+}
+
+:deep(.el-tabs__nav-wrap::after) {
+  height: 0;
 }
 </style>
