@@ -32,6 +32,8 @@
 <script>
 import {login} from "@/api/request";
 import {ElMessage} from "element-plus";
+import axios from "axios";
+import MD5 from "js-md5";
 
 export default {
   name: "LoginDialog",
@@ -59,11 +61,12 @@ export default {
       // 表单验证
       this.$refs.ruleFormRef.validate(async (valid) => {
         if (valid) { // 表单验证成功
-          // 发送登录请求
-          login({
+
+          axios.post('/api/user/login', {
             name: this.formLabelAlign.name,
-            password: this.formLabelAlign.password,
-          }).then(res => { // 登录成功
+            password: MD5(this.formLabelAlign.password),
+          }).then(res => {
+            console.log(res);
             if (res.code === 200) {
               this.$store.state.isLogin = true; // 显示登录成功
               localStorage.setItem('access_token', res.data)
@@ -77,17 +80,36 @@ export default {
               })
             }
           }).catch(err => {
-            console.log(err);
             return false;
           })
+
+          // 发送登录请求
+          // login({
+          //   name: this.formLabelAlign.name,
+          //   password: this.formLabelAlign.password,
+          // }).then(res => { // 登录成功
+          //   if (res.code === 200) {
+          //     this.$store.state.isLogin = true; // 显示登录成功
+          //     localStorage.setItem('access_token', res.data)
+          //     this.$router.push('/');
+          //     this.$store.state.loginActive = false; // 弹窗消失
+          //   } else { // 账号或者密码错误等信息
+          //     ElMessage({
+          //       message: res.data,
+          //       type: 'error',
+          //       duration: 3 * 1000
+          //     })
+          //   }
+          // }).catch(err => {
+          //   console.log(err);
+          //   return false;
+          // })
+
         } else {
           return false;
         }
       })
     },
-    registerUser() {
-      this.$router.push({name: 'register'});
-    }
   },
 }
 </script>
