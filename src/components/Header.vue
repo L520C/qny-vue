@@ -84,7 +84,13 @@ export default {
   },
   methods: {
     searchVideo() {
-      this.$router.push('/search');
+      this.$store.state.searchValue = this.input;
+      this.$router.push({
+        path: "/search",
+        query: {
+          t: Date.now(),
+        },
+      });
     },
     userLogin() {
       this.$store.state.loginActive = true;

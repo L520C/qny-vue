@@ -7,7 +7,7 @@ import Popular from "@/views/Popular.vue";
 import PhysicalCulture from "@/views/PhysicalCulture.vue";
 import Knowledge from "@/views/Knowledge.vue";
 import UploadFile from "@/components/UploadFile.vue";
-import Search from "@/components/Search.vue";
+import Search from "@/components/SearchCom.vue";
 
 const routes = [
     {
