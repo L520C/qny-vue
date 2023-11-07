@@ -8,6 +8,9 @@ export default createStore({
         searchValue: '',  // 搜索框的值
         isLogin: false, // 是否已经登录
         physicalCultureVideoDataList: reactive([]), // 体育视频数据
+        user: {
+            icon: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+        }, // 用户信息
     },
     getters: {},
     mutations: {},

@@ -5,21 +5,13 @@
       <img v-show="showCover" :src="coverSrc" alt="无资源" class="cover">
     </div>
     <div class="video-message">
-      <table>
-        <tr>
-          <td colspan="2">
-            <el-text class="video-title">{{ videoData.videoTitle }}</el-text>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-link :underline="false">@{{ videoData.videoAuthor }}</el-link>
-          </td>
-          <td>
-            <el-text>三天前</el-text>
-          </td>
-        </tr>
-      </table>
+      <div class="video-title">
+        {{ videoData.videoTitle }}
+      </div>
+      <div>
+        <el-link :underline="false">@{{ videoData.videoAuthor }}</el-link>
+        <el-text style="margin-left: 10px">三天前</el-text>
+      </div>
     </div>
     <el-dialog v-model="showBigVideo" :fullscreen="true" style="background-color: #161823;">
       <div class="video-content">
@@ -79,7 +71,6 @@ export default {
   },
   methods: {
     loadVideo() {
-
       const video = this.$refs.video;
       const videoUrl = this.videoData.videoM3U8Url;
 
@@ -124,27 +115,30 @@ export default {
 }
 
 .video-area {
-  width: auto;
+  width: 100%;
   height: 70%;
   display: flex;
-  flex-direction: column;
-//align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-player {
-  width: auto;
+  width: 100%;
   height: 100%;
 }
 
 .cover {
-  width: auto;
+  width: 100%;
   height: 100%;
 }
 
 .video-message {
   height: 30%;
   width: auto;
-  margin: 10px;
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+//justify-content: center;
 }
 
 img {

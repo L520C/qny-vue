@@ -1,23 +1,25 @@
 <template>
   <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
     <el-tab-pane label="作品" name="first">
-      <div v-for="(item, index) in videoDataList" :key="index">
+      <div v-for="(item, index) in selfVideoDataList" :key="index">
         <video-item :video-data="toRaw(item)" class="video-item"/>
       </div>
     </el-tab-pane>
     <el-tab-pane label="喜欢" name="second">
-      <user-like/>
+      <div v-for="(item, index) in likeVideoDataList" :key="index">
+        <video-item :video-data="toRaw(item)" class="video-item"/>
+      </div>
     </el-tab-pane>
     <el-tab-pane label="收藏" name="third">
       <div v-for="(item, index) in videoDataList" :key="index">
         <video-item :video-data="toRaw(item)" class="video-item"/>
       </div>
     </el-tab-pane>
-    <el-tab-pane label="历史记录" name="fourth">
-      <div v-for="(item, index) in videoDataList" :key="index">
-        <video-item :video-data="toRaw(item)" class="video-item"/>
-      </div>
-    </el-tab-pane>
+<!--    <el-tab-pane label="历史记录" name="fourth">-->
+<!--      <div v-for="(item, index) in videoDataList" :key="index">-->
+<!--        <video-item :video-data="toRaw(item)" class="video-item"/>-->
+<!--      </div>-->
+<!--    </el-tab-pane>-->
   </el-tabs>
 </template>
 
@@ -34,10 +36,14 @@ export default {
     return {
       activeName: 'first',
       videoDataList: reactive([]),
+      selfVideoDataList: reactive([]),
+      likeVideoDataList: reactive([]),
     }
   },
   mounted() {
-    this.getVideoData();
+    // this.getVideoData();
+    this.getSelfVideoData();
+    this.getLikeVideoData();
   },
   methods: {
     toRaw,
@@ -46,8 +52,23 @@ export default {
     },
     getVideoData() {
       axios.get('/api/video/video/randomVideo').then(res => {
-        console.log('获取到视频数据=>', res.data);
         this.videoDataList.push(res.data.data);
+      }).catch(err => {
+        console.log(err);
+      })
+    },
+    getSelfVideoData() {
+      axios.get("/api/video/video/getSelfVideo").then(res => {
+        this.selfVideoDataList.push(...res.data.data);
+      }).catch(err => {
+        console.log(err);
+      })
+    },
+    getLikeVideoData() {
+      axios.get("/api/video/videoLike/getVideoIds").then(res => {
+        this.likeVideoDataList.push(...res.data.data);
+        console.log("获取到个人视频=> ", this.likeVideoDataList);
+        // this.likeVideoDataList.push(...res.data.data);
       }).catch(err => {
         console.log(err);
       })

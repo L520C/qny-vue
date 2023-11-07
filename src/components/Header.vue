@@ -57,6 +57,8 @@
 import {Search} from '@element-plus/icons-vue'
 import ShareVideo from "@/components/ShareVideo.vue";
 import {userLogout} from "@/api/request";
+import axios from "axios";
+import {toRaw} from "vue";
 
 export default {
   components: {ShareVideo},
@@ -71,13 +73,17 @@ export default {
       set(value) {
         this.$store.state.isLogin = !value;
       }
+    },
+    circleUrl: {
+      get() {
+        return toRaw(this.$store.state.user).icon;
+      },
     }
   },
   data() {
     return {
       input: '',
       hovering: false,
-      circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       showChat: false,
       showAvatar: false,
     };
@@ -100,9 +106,16 @@ export default {
     },
     logout() { // 用户退出登录
       console.log("用户退出");
-      // userLogout().then(res => {
-      // }).catch(err => {
-      // })
+      axios.get("/api/user/logout").then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      })
+      // 用户数据清空
+      this.$store.state.user = {};
+      this.$store.state.isLogin = false;
+      this.$store.state.loginActive = true;
+      this.showAvatar = false;
     }
   }
 };

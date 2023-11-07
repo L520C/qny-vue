@@ -1,11 +1,11 @@
 <template>
   <div class="all">
     <div class="block">
-      <el-avatar :size="100" :src="form.circleUrl"/>
+      <el-avatar :size="100" :src="user.icon"/>
     </div>
     <div class="user-info">
       <div class="box">
-        <el-text size="large" class="username">{{ form.name }}</el-text>
+        <el-text size="large" class="username">{{ user.name }}</el-text>
       </div>
       <div class="box">
         <el-text>关注 30</el-text>
@@ -30,7 +30,7 @@
                style="background-color: rgb(37, 38, 50);">
       <el-form :model="form" label-position="top">
         <div class="form-avatar">
-          <el-avatar :size="100" :src="form.circleUrl"/>
+          <el-avatar :size="100" :src="user.icon"/>
           <el-text size="small">点击修改头像</el-text>
         </div>
         <el-form-item label="用户名">
@@ -61,10 +61,18 @@
 
 import {ArrowDown, CirclePlus, Money, VideoPlay} from "@element-plus/icons-vue";
 import {getMessage} from "@/api/request";
+import {toRaw} from "vue";
 
 export default {
   name: "UserInfo",
   components: {Money, VideoPlay, ArrowDown, CirclePlus},
+  computed: {
+    user: {
+      get() {
+        return toRaw(this.$store.state.user);
+      },
+    }
+  },
   data() {
     return {
       active: false,
