@@ -55,13 +55,13 @@
           <div class="shareDialogFoot">
             <div class="footText">其他分享方式</div>
             <div class="footSelect">
-            <span class="footItem">
+            <span class="footItem" @click="copyToClipboard">
               <img src="@/assets/image/video/qq.png" alt="qq" class="icon">
             </span>
-              <span class="footItem">
+              <span class="footItem" @click="copyToClipboard">
               <img src="@/assets/image/video/微信.png" alt="微信" class="icon">
             </span>
-              <span class="footItem">
+              <span class="footItem" @click="copyToClipboard">
               <img src="@/assets/image/video/链接.png" alt="链接" class="icon">
             </span>
             </div>
@@ -296,7 +296,11 @@ export default {
             console.log("ids=>"+this.videoIds,"index=>"+this.videoIdsIndex)
           }).catch(error => {
         console.log("错误信息=>", error)
-        alert("网络异常")
+        ElMessage({
+          showClose: true,
+          message: '网络波动，请刷新后重试',
+          type: 'error',
+        })
       })
     },
     followUser(){
@@ -379,7 +383,11 @@ export default {
             }
           }).catch(error => {
         console.log("错误信息=>", error)
-        alert("网络异常")
+        ElMessage({
+          showClose: true,
+          message: '网络波动，请刷新后重试',
+          type: 'error',
+        })
       })
     },
     handleCommentLike(item) {
@@ -390,6 +398,10 @@ export default {
               if (response.data.code === 200 && (response.data.data === true || response.data.data === 'true')) {
                 item.isLike = true;
                 item.likeCount = item.likeCount + 1;
+                ElMessage({
+                  showClose: true,
+                  message: '点赞成功',
+                })
               } else {
                 ElMessage({
                   showClose: true,
@@ -399,7 +411,11 @@ export default {
               }
             }).catch(error => {
           console.log("错误信息=>", error)
-          alert("网络异常")
+          ElMessage({
+            showClose: true,
+            message: '网络波动，请刷新后重试',
+            type: 'error',
+          })
         })
       } else {
         axios.put("/api/video/comment/subCommentLikeCount?commentId=" + item.id)
@@ -407,6 +423,10 @@ export default {
               if (response.data.code === 200 && (response.data.data === true || response.data.data === 'true')) {
                 item.isLike = false;
                 item.likeCount = item.likeCount - 1;
+                ElMessage({
+                  showClose: true,
+                  message: '取消点赞成功',
+                })
               } else {
                 ElMessage({
                   showClose: true,
@@ -416,7 +436,11 @@ export default {
               }
             }).catch(error => {
           console.log("错误信息=>", error)
-          alert("网络异常")
+          ElMessage({
+            showClose: true,
+            message: '网络波动，请刷新后重试',
+            type: 'error',
+          })
         })
       }
     },
@@ -435,7 +459,11 @@ export default {
             }
           }).catch(error => {
         console.log("错误信息=>", error)
-        alert("网络异常")
+        ElMessage({
+          showClose: true,
+          message: '网络波动，请刷新后重试',
+          type: 'error',
+        })
       })
     },
     handleCommentReply(item) {
@@ -483,7 +511,11 @@ export default {
             this.getRootComment();
           }).catch(error => {
         console.log("错误信息=>", error)
-        alert("网络异常")
+        ElMessage({
+          showClose: true,
+          message: '网络波动，请刷新后重试',
+          type: 'error',
+        })
       })
       this.commentInfo = ''
     },
@@ -510,7 +542,11 @@ export default {
             }
           }).catch(error => {
         console.log("错误信息=>", error)
-        alert("网络异常")
+        ElMessage({
+          showClose: true,
+          message: '网络波动，请刷新后重试',
+          type: 'error',
+        })
       })
     },
     handleCommentSend() {
@@ -538,7 +574,11 @@ export default {
             this.getRootComment();
           }).catch(error => {
         console.log("错误信息=>", error)
-        alert("网络异常")
+        ElMessage({
+          showClose: true,
+          message: '网络波动，请刷新后重试',
+          type: 'error',
+        })
       })
       this.commentInfo = ''
     },
@@ -646,10 +686,18 @@ export default {
                 this.isLike = false;
                 this.likeUrl = '/api/video/images/点赞(白色).png';
                 this.getLikeCount();
+                ElMessage({
+                  showClose: true,
+                  message: '取消点赞成功',
+                })
               }
             }).catch(error => {
           console.log("错误信息=>", error)
-          alert("网络异常")
+          ElMessage({
+            showClose: true,
+            message: '网络波动，请刷新后重试',
+            type: 'error',
+          })
         })
 
       } else {
@@ -659,6 +707,10 @@ export default {
                 this.isLike = true;
                 this.likeUrl = '/api/video/images/点赞(红色).png';
                 this.getLikeCount();
+                ElMessage({
+                  showClose: true,
+                  message: '点赞成功',
+                })
               }
             }).catch(error => {
           console.log("错误信息=>", error)
@@ -674,10 +726,18 @@ export default {
                 this.isCollect = false;
                 this.collectUrl = '/api/video/images/收藏(白色).png';
                 this.getCollectCount();
+                ElMessage({
+                  showClose: true,
+                  message: '取消收藏成功',
+                })
               }
             }).catch(error => {
           console.log("错误信息=>", error)
-          alert("网络异常")
+          ElMessage({
+            showClose: true,
+            message: '网络波动，请刷新后重试',
+            type: 'error',
+          })
         })
 
       } else {
@@ -687,6 +747,10 @@ export default {
                 this.isCollect = true;
                 this.collectUrl = '/api/video/images/收藏(黄色).png';
                 this.getCollectCount();
+                ElMessage({
+                  showClose: true,
+                  message: '收藏成功',
+                })
               }
             }).catch(error => {
           console.log("错误信息=>", error)
@@ -750,6 +814,30 @@ export default {
       this.shareCount++;
       this.shareDialog = true;
     },
+    copyToClipboard(){
+      const textToCopy = '我分享了一条优质视频 '+ window.location.href +' 复制此链接，打开七牛云(QNY)搜索，直接观看视频！';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          ElMessage({
+            showClose: true,
+            message: '分享链接已经复制到剪切板',
+            type: 'success',
+          })
+        }).catch(err => {
+          ElMessage({
+            showClose: true,
+            message: '分享链接复制失败',
+            type: 'error',
+          })
+        });
+      } else {
+        ElMessage({
+          showClose: true,
+          message: '浏览器不支持剪切板API',
+          type: 'error',
+        })
+      }
+    }
   },
 };
 
