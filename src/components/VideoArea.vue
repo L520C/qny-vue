@@ -1,10 +1,10 @@
 <template>
   <div class="all">
-    <div class="container" @wheel="onWheel">
+    <div class="container" @wheel="throttledOnWheel">
       <video ref="video" controls loop muted class="video-player"></video>
       <div class="interactions" @mouseleave="shareDialog=false">
-        <div class="circle">
-          <img src="@/assets/image/video/路飞头像.png" alt="avatar" class="avatar">
+        <div class="circle" @click="followUser()">
+          <img :src="authorIcon" alt="avatar" class="avatar">
         </div>
         <div class="interaction" @click="likeVideo">
           <img :src=likeUrl alt="like" class="icon">
@@ -191,8 +191,8 @@
     </div>
     <div class="changeVideo">
       <div class="changeButton">
-        <div class="videoPre"><el-icon><ArrowUpBold /></el-icon></div>
-        <div class="videoNext"><el-icon><ArrowDownBold /></el-icon></div>
+        <div class="videoPre" @click="videoPre"><el-icon><ArrowUpBold /></el-icon></div>
+        <div class="videoNext" @click="videoNext"><el-icon><ArrowDownBold /></el-icon></div>
       </div>
     </div>
   </div>
@@ -204,7 +204,7 @@ import Hls from 'hls.js';
 import axios from 'axios';
 import {ChatDotRound, Position} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
-
+import { throttle } from 'lodash';
 export default {
   components: {Comment},
   data() {
@@ -219,7 +219,9 @@ export default {
       collectCount: 0,
       isCollect: false,
       collectUrl: '/api/video/images/收藏(白色).png',
+      authorIcon:'/api/video/images/未知.jpg',
       videoInfo: {},
+      videoId:'',
       showComment: false,
       showReply: false,
       commentInfo: '',
@@ -231,11 +233,24 @@ export default {
       commentReplyInfoList: [],
       shareDialog: false,
       shareDialogInput: '',
-      followUsers:[]
+      followUsers:[],
+      videoIds:[],
+      videoIdsIndex:-1,
+      throttledOnWheel: null,
+      keysPressed: {}
     };
   },
   mounted() {
     this.fetchVideoUrl();
+    // 在组件实例化时绑定this上下文，并保存对节流函数的引用
+    this.throttledOnWheel = throttle(this.onWheel, 2000).bind(this);
+
+    window.addEventListener('keydown', this.handleKeydown);
+    window.addEventListener('keyup', this.handleKeyup);
+  },
+  beforeUnmount() {
+    window.removeEventListener('keydown', this.handleKeydown);
+    window.removeEventListener('keyup', this.handleKeyup);
   },
   beforeDestroy() {
     if (this.hls) {
@@ -244,7 +259,14 @@ export default {
   },
   methods: {
     fetchVideoUrl() {
-      axios.get('/api/video/video/randomVideo')
+      let url = '/api/video/video/randomVideo';
+      if (this.videoIdsIndex >= 0 && this.videoIdsIndex < this.videoIds.length) {
+        let vi = new URLSearchParams(window.location.search).get('videoId');
+        if (vi) {
+          url = '/api/video/video/getVideo/' + vi
+        }
+      }
+      axios.get(url)
           .then(response => {
             this.videoInfo = response.data.data;
             // console.log("response.data.data=>", response.data.data)
@@ -253,13 +275,58 @@ export default {
             this.likeCount = this.videoInfo.videLikeCount;
             this.collectCount = this.videoInfo.videoCollectCount;
             this.commentCount = this.videoInfo.videoCommentCount;
+            this.videoId = this.videoInfo.videoId;
+            if(this.videoInfo.user != null){
+              this.authorIcon = this.videoInfo.user.icon
+            }
+            if (this.videoIdsIndex < 0){
+              this.videoIdsIndex = 0;
+              this.videoIds = []
+              this.videoIds.push(this.videoId)
+            }else if (this.videoIdsIndex === this.videoIds.length){
+              this.videoIds.push(this.videoId)
+            }
+            // 更新浏览器地址栏的URL
+            let newUrl = window.location.pathname + '?videoId=' + this.videoId;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+
             this.isVideoLike();
             this.isVideoCollect();
             this.loadVideo();
+            console.log("ids=>"+this.videoIds,"index=>"+this.videoIdsIndex)
           }).catch(error => {
         console.log("错误信息=>", error)
         alert("网络异常")
       })
+    },
+    followUser(){
+      if (this.videoInfo.user != null){
+        if (this.videoInfo.user.userId != null){
+          axios.post("/api/video/userFollow/follow?followUserId="+this.videoInfo.user.userId)
+              .then(response => {
+                if (response.data.data){
+                  ElMessage({
+                    showClose: true,
+                    message: '关注成功',
+                    type: 'success',
+                  })
+                }else {
+                  ElMessage({
+                    showClose: true,
+                    message: '已经关注啦',
+                    // type: 'normal',
+                  })
+                }
+              }).catch(error => {
+            console.log("错误信息=>", error)
+            ElMessage({
+              showClose: true,
+              message: '网络异常',
+              type: 'error',
+            })
+          })
+        }
+      }
     },
     handleShare(){
       this.shareDialog=true
@@ -290,6 +357,30 @@ export default {
     },
     shareToFriend(user){
       user.show = true;
+      console.log("user=>",user)
+      let sendData = {
+        videoId:this.videoId,
+        toUserId:user.userId
+      }
+      axios.post("/api/video/videoShare/videoShare",sendData)
+          .then(response => {
+            if (response.data.code === 200 && (response.data.data === true || response.data.data === 'true')) {
+              ElMessage({
+                showClose: true,
+                message: '分享成功',
+                type: 'success',
+              })
+            } else {
+              ElMessage({
+                showClose: true,
+                message: '分享失败',
+                type: 'error',
+              })
+            }
+          }).catch(error => {
+        console.log("错误信息=>", error)
+        alert("网络异常")
+      })
     },
     handleCommentLike(item) {
       // alert(item.isLike)
@@ -474,7 +565,77 @@ export default {
     },
     onWheel(event) {
       if (!this.showComment && !this.shareDialog) {
+        if (event.deltaY < 0) {
+          if (this.videoIdsIndex <= 0){
+            ElMessage({
+              showClose: true,
+              message: '上面已经没有内容啦',
+            })
+          }else {
+            this.videoIdsIndex = this.videoIdsIndex -1;
+            // 更新浏览器地址栏的URL
+            let newUrl = window.location.pathname + '?videoId=' + this.videoIds[this.videoIdsIndex];
+            window.history.pushState({ path: newUrl }, '', newUrl);
+          }
+        } else if (event.deltaY > 0) {
+          this.videoIdsIndex = this.videoIdsIndex + 1;
+          if (this.videoIdsIndex < this.videoIds.length){
+            // 更新浏览器地址栏的URL
+            let newUrl = window.location.pathname + '?videoId=' + this.videoIds[this.videoIdsIndex];
+            window.history.pushState({ path: newUrl }, '', newUrl);
+          }
+        }
         this.fetchVideoUrl();
+        throttledOnWheel: throttle(function(event) {
+          this.onWheel(event);
+        }, 2000) // 在200毫秒内最多执行一次
+      }
+    },
+    videoPre(){
+      if (this.videoIdsIndex <= 0){
+        ElMessage({
+          showClose: true,
+          message: '上面已经没有内容啦',
+        })
+      }else {
+        this.videoIdsIndex = this.videoIdsIndex -1;
+        // 更新浏览器地址栏的URL
+        let newUrl = window.location.pathname + '?videoId=' + this.videoIds[this.videoIdsIndex];
+        window.history.pushState({ path: newUrl }, '', newUrl);
+      }
+      this.fetchVideoUrl();
+
+    },
+    videoNext(){
+      this.videoIdsIndex = this.videoIdsIndex + 1;
+      if (this.videoIdsIndex < this.videoIds.length){
+        // 更新浏览器地址栏的URL
+        let newUrl = window.location.pathname + '?videoId=' + this.videoIds[this.videoIdsIndex];
+        window.history.pushState({ path: newUrl }, '', newUrl);
+      }
+      this.fetchVideoUrl();
+    },
+    handleKeydown(event) {
+      // 如果已经按下该键并正在处理，则不再次触发
+      if (this.keysPressed[event.key]) {
+        return;
+      }
+
+      // 标记该键为已按下
+      this.keysPressed[event.key] = true;
+
+      if (event.key === 'ArrowDown') {
+        // 当按下键时执行的方法
+        this.videoNext();
+      }
+    },
+    handleKeyup(event) {
+      // 标记该键为已释放
+      this.keysPressed[event.key] = false;
+
+      if (event.key === 'ArrowUp') {
+        // 当松开上键时执行的方法
+        this.videoPre();
       }
     },
     likeVideo() {
@@ -696,8 +857,8 @@ export default {
 }
 
 .circle {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background-color: #ccc;
   display: flex;
