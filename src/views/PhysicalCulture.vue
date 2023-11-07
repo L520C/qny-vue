@@ -19,16 +19,27 @@ export default {
   mounted() {
     this.getVideoData();
   },
+  computed: {
+    videoDataList: {
+      get() {
+        return this.$store.state.physicalCultureVideoDataList;
+      },
+      set(value) {
+        this.$store.state.physicalCultureVideoDataList = value;
+      }
+    }
+  },
   data() {
     return {
-      videoDataList: reactive([])
+      // videoDataList: reactive([])
     }
   },
   methods: {
     toRaw,
     getVideoData() {
+      // if (!this.videoDataList || this.videoDataList.length === 0) return;
       getPhysicalCultureVideo().then(res => {
-        console.log(res.data);
+        console.log('获取到请求数据', res.data);
         this.videoDataList.push(...res.data);
         console.log(toRaw(this.videoDataList));
       }).catch(err => {
@@ -54,7 +65,7 @@ export default {
 
 .video-item-content {
   width: 30%;
-  height: 300px;
+  height: 250px;
   float: left;
   margin: 10px;
 }
