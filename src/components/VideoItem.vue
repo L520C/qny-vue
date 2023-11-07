@@ -1,10 +1,9 @@
 <template>
   <div class="video-all">
-    <div @mouseenter="playVideo" @mouseleave="pauseVideo" class="video-area">
+    <div @mouseenter="playVideo" @mouseleave="pauseVideo" class="video-area" @click="bigVideo">
       <video v-show="!showCover" ref="video" loop muted :id="videoData.id" class="video-player"/>
       <img v-show="showCover" :src="coverSrc" alt="无资源" class="cover">
     </div>
-
     <div class="video-message">
       <table>
         <tr>
@@ -22,15 +21,22 @@
         </tr>
       </table>
     </div>
+    <el-dialog v-model="showBigVideo" :fullscreen="true" style="background-color: #161823;">
+      <div class="video-content">
+        <video-show :videoId="videoData.videoId"/>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Hls from 'hls.js';
-import {randomVideo} from "@/api/request"; // 使用封装好的axios
+import {randomVideo} from "@/api/request";
+import VideoShow from "@/components/VideoShow.vue"; // 使用封装好的axios
 
 export default {
   name: "VideoItem",
+  components: {VideoShow},
   props: {
     videoData: {
       required: true,
@@ -52,6 +58,7 @@ export default {
       showCover: true,
       hls: null,
       coverSrc: 'https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/ironMan.jpg',
+      showBigVideo: false,
     };
   },
   mounted() {
@@ -61,9 +68,8 @@ export default {
   created() {
     this.videoData.timeDesc = '三天前';
     let videoTitle = this.videoData.videoTitle;
-    console.log("videoItem videotitle=>", videoTitle);
     if (videoTitle && videoTitle.length > 10) {
-      this.videoData.videoTitle = videoTitle.substring(0,10) + '...';
+      this.videoData.videoTitle = videoTitle.substring(0, 10) + '...';
     }
   },
   beforeDestroy() {
@@ -100,6 +106,9 @@ export default {
       }
       this.showCover = true;
     },
+    bigVideo() {
+      this.showBigVideo = true;
+    }
   }
 }
 </script>
@@ -152,5 +161,10 @@ img {
   font-weight: 600;
   color: #cbc7c7;
   margin-bottom: 10px;
+}
+
+.video-content {
+  width: 100%;
+  height: 85vh;
 }
 </style>
