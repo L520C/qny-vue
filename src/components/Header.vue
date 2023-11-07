@@ -17,7 +17,7 @@
           </el-icon>
           通知
         </el-text>
-        <ShareVideo v-show="showChat"/>
+        <ShareVideo v-if="showChat"/>
       </div>
       <div class="optionBox" @click="toUpload">
         <el-text class="options-area">

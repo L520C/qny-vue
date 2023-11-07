@@ -6,33 +6,80 @@
       </div>
       <div class="shareDialogContent">
         <div class="shareFriends">
-          <div class="shareFriendsItem" v-for="n in 8" :key="n">
+          <div class="shareFriendsItem" @click="showShareVideo(shareInfo.videoId)" v-for="shareInfo in shareInfoList" :key="shareInfo.videoCover">
             <div class="friendInfo">
-              <div >
-                <img class="friendInfoAvatar" src="http://localhost:10002/video/images/初音未来.jpg" alt="avatar">
+              <div>
+                <img class="friendInfoAvatar" :src="shareInfo.user.icon" alt="avatar">
               </div>
               <div class="friendInfoStatus">
-                <span style="font-size: 14px;">秃头披风侠 </span>
-                <span style="font-size: 13px;color: #6d7070">在 2023-11-08 22:12:06 分享了视频</span>
+                <span style="font-size: 14px;">{{ shareInfo.user.name }} </span>
+                <span style="font-size: 13px;color: #6d7070">在 {{ shareInfo.shareTime }}6 分享了视频</span>
               </div>
             </div>
             <div class="shareControl">
-              <img style="height: 40px;width: 40px;margin-right: 20px" src="http://localhost:10002/video/images/初音未来.jpg" />
+              <img style="height: 40px;width: 40px;margin-right: 20px"
+                   :src="shareInfo.videoCover"/>
             </div>
+            <el-dialog style="background: rgba(200,200,200,0);" width="70%"
+                       align-center v-model="visible"
+                       :destroy-on-close="true"
+                       :show-close="false">
+                <VideoShow :video-id="shareInfo.videoId" :isSecond="true"/>
+            </el-dialog>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
-<script setup>
+<script >
+import axios from "axios";
+import {ElMessage} from "element-plus";
+import HomeView from "@/views/SingleVideo.vue";
+import VideoArea from "@/components/VideoArea.vue";
+import VideoShow from "@/components/VideoShow.vue";
 
+export default {
+  components: {VideoShow, VideoArea, HomeView},
+  data() {
+    return{
+      videoId:'',
+      shareInfoList:[],
+      visible:false
+    }
+  },
+  mounted() {
+    this.getAllShareInfo()
+  },
+  methods: {
+    getAllShareInfo(){
+      this.getVideoIdFromUrl()
+      axios.get("/api/video/videoShare/getAllShareVideo")
+          .then(response => {
+            this.shareInfoList = response.data.data;
+          }).catch(error => {
+        console.log("错误信息=>", error)
+        alert("网络异常")
+      })
+    },
+    getVideoIdFromUrl() {
+      // 获取URL中的查询参数videoId
+      let vi = new URLSearchParams(window.location.search).get('videoId');
+      if (vi) {
+        // 如果videoId存在，可以做进一步的处理
+        this.videoId = vi;
+      }
+    },
+    showShareVideo(videoId){
+      this.visible = true;
+    }
+  }
+}
 </script>
 
 <style scoped>
-.container{
+.container {
   height: 500px;
   width: 300px;
   max-height: 660px;
@@ -47,6 +94,7 @@
   /* 立体阴影效果 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), /* 较小的硬阴影 */ 0 10px 20px rgba(0, 0, 0, 0.05); /* 较大的模糊阴影 */
 }
+
 .shareDialog {
   width: 100%;
   height: 100%;
@@ -56,8 +104,7 @@
 
 .shareDialogHead {
   flex: 1;
-//border: red; display: flex; /* 启用 flex 布局 */ justify-content: center; /* 水平居中 */ align-items: center; /* 垂直居中 */
-  border-bottom: 1px solid rgb(60, 60, 60); /* 设置下边框 */
+//border: red; display: flex; /* 启用 flex 布局 */ justify-content: center; /* 水平居中 */ align-items: center; /* 垂直居中 */ border-bottom: 1px solid rgb(60, 60, 60); /* 设置下边框 */
 }
 
 .shareDialogContent {
@@ -65,6 +112,7 @@
   border-bottom: 1px solid rgb(60, 60, 60); /* 设置下边框 */
   overflow-y: auto; /* 当内容超出时显示滚动条 */
 }
+
 /* 隐藏webkit浏览器的滚动条 */
 .shareDialogContent::-webkit-scrollbar {
   display: none;
@@ -82,7 +130,8 @@
   margin-bottom: 5px;
 //background-color: cadetblue; display: flex; /* 启用 flex 布局 */
 }
-.shareFriendsItem:hover{
+
+.shareFriendsItem:hover {
   background-color: rgba(148, 143, 143, 0.2);
 }
 
@@ -115,6 +164,4 @@
   height: 100%; /* 设置父容器的高度，确保有足够的空间进行垂直平分 */
   margin-left: 10px;
 }
-
-
 </style>
