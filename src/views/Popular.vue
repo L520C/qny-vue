@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     toRaw,
-    // 获取三个随机视频
+    // 获取1个随机视频
     getVideoData() {
       axios.get('/api/video/video/randomVideo').then(res => {
         console.log('获取到视频数据=>', res.data);

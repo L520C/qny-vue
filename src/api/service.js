@@ -1,8 +1,6 @@
 import axios from 'axios'
 import {ElMessage, ElLoading} from 'element-plus'
 
-let loadingInstance = null //这里是loading
-
 //使用create方法创建axios实例
 export const Service = axios.create({
     timeout: 7000, // 请求超时时间
@@ -20,27 +18,12 @@ Service.interceptors.request.use(config => {
         config.data = true;
     }
     config.headers['Authorization'] = localStorage.getItem('access_token');
-
-    loadingInstance = ElLoading.service({
-        lock: true,
-        text: 'loading...'
-    })
-    return config
+    return config;
 })
 
 // 添加响应拦截器
 Service.interceptors.response.use(response => {
-    loadingInstance.close(); // 关闭加载页面
     return response.data; // 返回数据
 }, error => { // 响应报错
-    // console.log('TCL: error', error)
-    // const msg = error.Message !== undefined ? error.Message : ''
-    // ElMessage({
-    //     message: '网络错误' + msg,
-    //     type: 'error',
-    //     duration: 3 * 1000
-    // })
-    // loadingInstance.close()
-    // return Promise.reject(error)
-    loadingInstance.close();
+    console.log('TCL: error', error)
 })
