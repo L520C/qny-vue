@@ -1,20 +1,18 @@
 <template>
   <div class="all" ref="all" v-on:scroll="checkScroll">
     <div class="video-area">
-      <h1>热门视频</h1>
+      <h1>视频</h1>
       <div v-for="item in videoDataList" :key="item.videoId">
         <video-item :video-data="toRaw(item)" class="video-item-content"/>
       </div>
     </div>
     <div class="rank-area">
-      <h1>热门排行</h1>
+      <h1>相关搜索</h1>
       <div class="ranking-item">
-        <div v-for="(item, index) in rankDataList" :key="index" class="ranking-item-content">
+        <div v-for="(item, index) in videoDataList" :key="index" class="ranking-item-content">
           <el-link :underline="false">
-            <div style="margin: 5px">
-              <el-text class="rank-num">{{ index + 1 }}</el-text>
-            </div>
-            <ranking-item :title="toRaw(item).videoTitle" :hot-num="toRaw(item).videoHots"/>
+            <el-icon size="15"><Search /></el-icon>
+            <el-text style="font-size: 15px; margin-left: 10px; color: white">{{ toRaw(item.videoTitle) }}</el-text>
           </el-link>
         </div>
       </div>
@@ -31,7 +29,7 @@ import axios from "axios";
 import {reactive, toRaw} from "vue";
 
 export default {
-  name: 'Popular',
+  name: 'SearchCom',
   components: {VideoItem, RankingItem, VideoItemPlayer},
   data() {
     return {
@@ -43,18 +41,13 @@ export default {
     this.getVideoData(); // 获取视频数据
     this.getRankData();
   },
-  created() {
-    for (let i = 0; i < 5; i++) {
-      this.getVideoData();
-    }
-  },
   methods: {
     toRaw,
-    // 获取1个随机视频
+    // 根据搜索值获取视频信息
     getVideoData() {
-      axios.get('/api/video/video/randomVideo').then(res => {
-        console.log('获取到视频数据=>', res.data);
-        this.videoDataList.push(res.data.data);
+      axios.get('/api/video/video/search?search=' + this.$store.state.searchValue).then(res => {
+        console.log('搜索到视频数据=>', res.data);
+        this.videoDataList.push(...res.data.data);
       }).catch(err => {
         console.log(err);
       })
@@ -106,8 +99,13 @@ export default {
 }
 
 .ranking-item-content {
+  width: 100%;
   display: flex;
-  margin: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgb(51, 52, 63);
+  border-radius: 15px; /* 卡片边角的圆滑度 */
+  transition: box-shadow 0.3s ease-in-out; /* 阴影变化的过渡效果 */
 }
 
 .rank-num {

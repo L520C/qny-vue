@@ -25,15 +25,14 @@
     </el-form-item>
     <el-button @click="userLogin">登录</el-button>
     <el-button native-type="reset">重置</el-button>
-    <!--    <el-button @click="registerUser()">注册</el-button>-->
   </el-form>
 </template>
 
 <script>
-import {login} from "@/api/request";
 import {ElMessage} from "element-plus";
 import axios from "axios";
 import MD5 from "js-md5";
+import {toRaw} from "vue";
 
 export default {
   name: "LoginDialog",
@@ -67,8 +66,10 @@ export default {
           }).then(res => {
             console.log(res.data);
             if (res.data.code === 200) {
+              this.$store.state.user = res.data.data.user; // 用户信息保存
+              console.log("user=>", toRaw(this.$store.state.user).icon);
               this.$store.state.isLogin = true; // 显示登录成功
-              localStorage.setItem('access_token', res.data.data)
+              localStorage.setItem('access_token', res.data.data.token)
               this.$router.push('/');
               this.$store.state.loginActive = false; // 弹窗消失
             } else { // 账号或者密码错误等信息
@@ -78,32 +79,11 @@ export default {
                 duration: 3 * 1000
               })
             }
+            this.formLabelAlign.name = '';
+            this.formLabelAlign.password = '';
           }).catch(err => {
             return false;
           })
-
-          // 发送登录请求
-          // login({
-          //   name: this.formLabelAlign.name,
-          //   password: this.formLabelAlign.password,
-          // }).then(res => { // 登录成功
-          //   if (res.code === 200) {
-          //     this.$store.state.isLogin = true; // 显示登录成功
-          //     localStorage.setItem('access_token', res.data)
-          //     this.$router.push('/');
-          //     this.$store.state.loginActive = false; // 弹窗消失
-          //   } else { // 账号或者密码错误等信息
-          //     ElMessage({
-          //       message: res.data,
-          //       type: 'error',
-          //       duration: 3 * 1000
-          //     })
-          //   }
-          // }).catch(err => {
-          //   console.log(err);
-          //   return false;
-          // })
-
         } else {
           return false;
         }

@@ -1,36 +1,34 @@
 <template>
   <div class="video-all">
-    <div @mouseenter="playVideo" @mouseleave="pauseVideo" class="video-area">
+    <div @mouseenter="playVideo" @mouseleave="pauseVideo" class="video-area" @click="bigVideo">
       <video v-show="!showCover" ref="video" loop muted :id="videoData.id" class="video-player"/>
       <img v-show="showCover" :src="coverSrc" alt="无资源" class="cover">
     </div>
-
     <div class="video-message">
-      <table>
-        <tr>
-          <td colspan="2">
-            <el-text class="video-title">{{ videoData.videoTitle }}</el-text>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <el-link :underline="false">@{{ videoData.videoAuthor }}</el-link>
-          </td>
-          <td>
-            <el-text>三天前</el-text>
-          </td>
-        </tr>
-      </table>
+      <div class="video-title">
+        {{ videoData.videoTitle }}
+      </div>
+      <div>
+        <el-link :underline="false">@{{ videoData.videoAuthor }}</el-link>
+        <el-text style="margin-left: 10px">三天前</el-text>
+      </div>
     </div>
+    <el-dialog v-model="showBigVideo" :fullscreen="true" style="background-color: #161823;">
+      <div class="video-content">
+        <video-show :videoId="videoData.videoId"/>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Hls from 'hls.js';
-import {randomVideo} from "@/api/request"; // 使用封装好的axios
+import {randomVideo} from "@/api/request";
+import VideoShow from "@/components/VideoShow.vue"; // 使用封装好的axios
 
 export default {
   name: "VideoItem",
+  components: {VideoShow},
   props: {
     videoData: {
       required: true,
@@ -52,6 +50,7 @@ export default {
       showCover: true,
       hls: null,
       coverSrc: 'https://cdn.jsdelivr.net/gh/xdlumia/files/video-play/ironMan.jpg',
+      showBigVideo: false,
     };
   },
   mounted() {
@@ -61,9 +60,8 @@ export default {
   created() {
     this.videoData.timeDesc = '三天前';
     let videoTitle = this.videoData.videoTitle;
-    console.log("videoItem videotitle=>", videoTitle);
-    if (videoTitle.length > 10) {
-      this.videoData.videoTitle = videoTitle.substring(0,10) + '...';
+    if (videoTitle && videoTitle.length > 10) {
+      this.videoData.videoTitle = videoTitle.substring(0, 10) + '...';
     }
   },
   beforeDestroy() {
@@ -73,7 +71,6 @@ export default {
   },
   methods: {
     loadVideo() {
-
       const video = this.$refs.video;
       const videoUrl = this.videoData.videoM3U8Url;
 
@@ -100,6 +97,9 @@ export default {
       }
       this.showCover = true;
     },
+    bigVideo() {
+      this.showBigVideo = true;
+    }
   }
 }
 </script>
@@ -115,27 +115,30 @@ export default {
 }
 
 .video-area {
-  width: auto;
+  width: 100%;
   height: 70%;
   display: flex;
-  flex-direction: column;
-//align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .video-player {
-  width: auto;
+  width: 100%;
   height: 100%;
 }
 
 .cover {
-  width: auto;
+  width: 100%;
   height: 100%;
 }
 
 .video-message {
   height: 30%;
   width: auto;
-  margin: 10px;
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+//justify-content: center;
 }
 
 img {
@@ -145,7 +148,6 @@ img {
 
 
 .video-auth {
-//float: left; display: flex; flex-direction: row;
 }
 
 .video-title {
@@ -153,5 +155,10 @@ img {
   font-weight: 600;
   color: #cbc7c7;
   margin-bottom: 10px;
+}
+
+.video-content {
+  width: 100%;
+  height: 85vh;
 }
 </style>
