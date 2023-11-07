@@ -62,7 +62,7 @@ export default {
     this.videoData.timeDesc = '三天前';
     let videoTitle = this.videoData.videoTitle;
     console.log("videoItem videotitle=>", videoTitle);
-    if (videoTitle.length > 10) {
+    if (videoTitle && videoTitle.length > 10) {
       this.videoData.videoTitle = videoTitle.substring(0,10) + '...';
     }
   },
@@ -145,7 +145,6 @@ img {
 
 
 .video-auth {
-//float: left; display: flex; flex-direction: row;
 }
 
 .video-title {
